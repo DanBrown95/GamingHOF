@@ -1,18 +1,87 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+	<div class="app">
+		<!-- Sidebar -->
+		<Sidebar />
+
+		<!-- Content -->
+    <div class="content">
+      <router-view />
+    </div>
+	</div>
 </template>
 
+
+<script>
+import Sidebar from '@/components/SideBar.vue'
+
+export default {
+  name: "App",
+  components: {
+    Sidebar
+  },
+  data: function () {
+    return {
+    }
+  },
+  mounted() {
+  },
+  watch: {
+  },
+  methods: {
+  }
+};
+</script>
+
 <style>
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Fira sans', sans-serif;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+html, body {
+  height: 100%;
+  margin: 0px;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  margin-left: calc(2rem + 32px);
+  transition: 0.2s ease-in-out;
+}
+
+ body {
+	background: #f1f5f9;
+}
+ button {
+	cursor: pointer;
+	appearance: none;
+	border: none;
+	outline: none;
+	background: none;
+}
+ .app {
+	display: flex;
+}
+ .app main {
+	flex: 1 1 0;
+	padding: 2rem;
+}
+ @media (max-width: 1024px) {
+	.app main {
+	padding-left: 6rem;
+	}
 }
 
 nav {
