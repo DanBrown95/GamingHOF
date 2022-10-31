@@ -1,11 +1,9 @@
 <template>
     <div class="container">
-        <h3>{{label}}</h3>
+        <h3 class="label">{{label}}</h3>
         <div class="scroll-container">
-            <div class="grid-scroll">
-                <div v-for="item in items" :key="item.id" class="column">
-                    <Submission :model="item"></Submission>
-                </div>
+            <div v-for="item in items" :key="item.id" class="submission">
+                <Submission :model="item" :displayType="displayType"></Submission>
             </div>
         </div> 
     </div>
@@ -16,7 +14,7 @@ import Submission from '@/components/Submission.vue'
 
 export default {
     name: "submission-list",
-    props: ['items', 'label'],
+    props: ['items', 'label', 'displayType'],
     components: {
         Submission
     },
@@ -30,7 +28,7 @@ export default {
 
 <style scoped>
     .container {
-        padding-bottom: 20px;
+        height: 100%;
     }
 
     h3 {
@@ -42,12 +40,11 @@ export default {
     .scroll-container {
         overflow: auto;
         white-space: nowrap;
-        padding: 5px 70px 5px 20px;
         background: transparent;
-        height: 100%;
-        border-radius:15px;
-
-        /* hide horizontal scroll bar */
+        height: 80%;
+        overflow-y: hidden;
+        
+        /* hide horizontal scroll bar in IE and Firefox */
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
@@ -56,6 +53,9 @@ export default {
     .scroll-container::-webkit-scrollbar {
         width: 5px;
         max-height: 5px;
+
+        /* uncomment to hide scroll bar entirely in chrome */
+        /* display: none; */
     }
     
     .scroll-container::-webkit-scrollbar-thumb {
@@ -69,14 +69,15 @@ export default {
         margin: 0 200px;
     }
 
-    .column {
-        padding: 5px;
-        display: inline-block;
-        align-items: center;
+    .label {
+        height: 20%;
     }
 
-    .row::after {
-        content: "";
-        clear: both;
+    .submission {
+        height: 80%;
+        padding: 0 5px;
+        display: inline-block;
+        align-items: center;
+        padding-bottom: 5px;
     }
 </style>

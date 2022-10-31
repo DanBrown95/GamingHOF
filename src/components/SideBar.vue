@@ -2,7 +2,9 @@
 <template>
 	<aside :class="`${is_expanded ? 'is-expanded' : ''}`">
 		<div class="logo">
-			<img :src="logoURL" alt="Vue" /> 
+			<router-link :to="{name: 'home'}">
+				<img :src="logoURL" alt="Vue" /> 
+			</router-link>
 		</div>
 
 		<h2 class="company-name">Gaming HOF</h2>
@@ -15,7 +17,7 @@
 
 		<h3>Menu</h3>
 		<div class="menu">
-			<router-link to="/" class="button">
+			<router-link :to="{name: 'home'}" class="button">
 				<span class="material-icons">home</span>
 				<span class="text">Home</span>
 			</router-link>
@@ -72,6 +74,7 @@ aside {
     min-height: 100vh;
     padding: 1rem;
     transition: 0.2s ease-in-out;
+	z-index: 9;
 }
 
 aside .flex {
