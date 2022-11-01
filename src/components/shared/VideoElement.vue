@@ -10,7 +10,7 @@ import Hls from 'hls.js'
 
 export default {
     name: 'VideoElement',
-    props: ['src', 'styleConfig'],
+    props: ['src', 'styleConfig', 'autoplay'],
     data(){
         return {
             instance: null,
@@ -20,11 +20,16 @@ export default {
                 fullscreen: true,
                 fullscreenWeb: true,
                 pip: true,
+                autoplay: false,
+                autoOrientation: true,
             },
         }
     },
     mounted() {
         this.option.url = this.src;
+        if(this.autoplay === true){
+            this.option.autoplay = true;
+        }
         this.instance = new Artplayer({
             ...this.option,            
             container: this.$refs.artRef,
@@ -42,9 +47,15 @@ export default {
                 },
             }
         });
+        document.getElementsByClassName('art-state')[0].style.display = "none";
 
         this.$nextTick(() => {
             this.$emit("get-instance", this.instance);
+        });
+
+        // rewind to start of video when ended.
+        this.instance.on('video:ended', () => {
+            this.instance.seek = 0;
         });
     },
     beforeUnmount() {
@@ -57,8 +68,8 @@ export default {
 
 <style scoped>
     .player {
-        width: 600px;
-        height: 400px;
+        min-width: 600px;
+        min-height: 400px;
         margin: 0 auto;
         border-radius: 0px;
         overflow: hidden;

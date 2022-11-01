@@ -3,7 +3,7 @@
         <div class="center">
             <p class="title">{{ submissionDetails.title }}</p>
         </div>
-        <video-element class="video" :src="fakeUrl" :styleConfig="customPlayerStyle"></video-element>
+        <video-element class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
         <div>
             <table class="table">
                 <tr>
@@ -46,18 +46,26 @@ export default {
                 width: "600px",
                 cornerRadius: "20px"
             },
-            submissionDetails: { creator: 'Bob', date: '12/10/2022', console: 'xbox', title: 'WTF PWNED', votes: 234553, rank: '2' },
-            fakeUrl: "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8"
+            submissionDetails: { creator: 'Bob', date: '12/10/2022', console: 'xbox', title: 'WTF PWNED', votes: 234553, rank: '2', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8' },
         }
     },
     mounted() {
-        // Get details from id
+        // Get details from id and populate submission details.
         // pass url to videoPlayer
     }
 }
 </script>
 
 <style scoped>
+
+.title {
+    min-width: 600px;
+    padding: 10px 50px;
+    border-radius: 20px;
+    background-color: #F1F5F8;
+    box-shadow: 8px 8px 12px #5d5a5a, -8px -8px 12px #ffffff;
+}
+
 .center {
     line-height: 80px;
     height: 80px;
@@ -76,20 +84,14 @@ export default {
 
 .table {
     width: 90%;
-    margin: auto;
-    border-radius: 20px;
-    overflow: hidden;
     border-spacing: 0;
-    border: solid 1px whitesmoke;
-}
-
-table tr:nth-child(odd) {
-    background-color: #4C8BF5;
-    color: #fff;
+    margin: 0 auto;
+    border-radius: 20px;
+    background-color: #F1F5F8;
+    box-shadow: inset 10px 7px 11px #bfbcd9d9, inset -7px -6px 3px #ffffff;
 }
 
 tr {
-    background-color: white;
     height: 50px;
 }
 
@@ -100,11 +102,5 @@ th {
 td {
     padding-left: 20px;
     text-align: left;
-}
-</style>
-
-<style>
-body {
-    background-color: gainsboro;
 }
 </style>

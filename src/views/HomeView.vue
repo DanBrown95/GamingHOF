@@ -1,12 +1,12 @@
 <template>
   <div class="home">
-    <div style="height: 300px;">
+    <div style="height: 300px; margin: 20px 0;">
       <SubmissionList :items="items" label="Xbox" displayType="rank"></SubmissionList>
     </div>
-    <div style="height: 300px;">
+    <div style="height: 300px; margin: 20px 0;">
       <SubmissionList :items="items" label="Playstation" displayType="rank"></SubmissionList>
     </div>
-    <div style="height: 300px;">
+    <div style="height: 300px; margin: 20px 0;">
       <SubmissionList :items="items" label="PC" displayType="month"></SubmissionList>
     </div>
   </div>

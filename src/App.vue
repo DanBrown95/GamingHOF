@@ -33,6 +33,9 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #F1F5F8;
+}
 
 * {
 	margin: 0;
@@ -62,9 +65,6 @@ html, body {
   overflow: hidden;
 }
 
- body {
-	background: #f1f5f9;
-}
  button {
 	cursor: pointer;
 	appearance: none;
