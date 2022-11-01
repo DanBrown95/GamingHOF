@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/submission/:id',
     name: 'submissionDetails',
-    component: () => import('../views/SubmissionDetails.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/SubmissionDetails.vue')
   }
 ]
 
