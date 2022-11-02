@@ -1,5 +1,5 @@
 <template>
-    <a class="button" :style="{'background-color': buttonColor}">
+    <a @click="$emit('click')" class="button" :style="{'background-color': buttonColor}">
         <span class="material-icons" :style="{'color': iconColor}">{{icon}}</span>
         <span class="text" :style="{'color': textColor}">{{upperText}}</span>
     </a>
@@ -9,6 +9,7 @@
 
 export default {
     name: 'NeuButton',
+    emits: ['click'],
     props: {
         text: {
             type: String,

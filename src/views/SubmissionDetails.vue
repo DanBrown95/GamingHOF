@@ -5,8 +5,8 @@
         </div>
         <video-element class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
         <div class="button-container">
-            <neu-button icon="thumb_up_alt" text="upvote"></neu-button>
-            <neu-button icon="report" text="Report" iconColor="red"></neu-button>
+            <neu-button @click="voteClicked" icon="thumb_up_alt" text="upvote"></neu-button>
+            <neu-button @click="reportClicked" icon="report" text="Report" iconColor="red"></neu-button>
         </div>
         <details-table :details="submissionDetails"></details-table>
     </div>
@@ -37,6 +37,14 @@ export default {
     mounted() {
         // Get details from id and populate submission details.
         // pass url to videoPlayer
+    },
+    methods: {
+        voteClicked(){
+            console.log("voted");
+        },
+        reportClicked(){
+            console.log("reported");
+        }
     }
 }
 </script>
