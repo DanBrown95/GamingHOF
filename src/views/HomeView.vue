@@ -14,7 +14,7 @@
 
 <script>
 // @ is an alias to /src
-import SubmissionList from '@/components/Submissions.vue'
+import SubmissionList from '@/components/submission/Submissions.vue'
 
 export default {
   name: 'HomeView',

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Submission from '@/components/Submission.vue'
+import Submission from '@/components/submission/Submission.vue'
 
 export default {
     name: "submission-list",

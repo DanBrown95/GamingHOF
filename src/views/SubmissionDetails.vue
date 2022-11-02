@@ -4,40 +4,25 @@
             <p class="title">{{ submissionDetails.title }}</p>
         </div>
         <video-element class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
-        <div>
-            <table class="table">
-                <tr>
-                    <th>Creator</th>
-                    <td>{{ submissionDetails.creator }}</td>
-                </tr>
-                <tr>
-                    <th>Console</th>
-                    <td>{{ submissionDetails.console }}</td>
-                </tr>
-                <tr>
-                    <th>Date</th>
-                    <td>{{ submissionDetails.date }}</td>
-                </tr>
-                <tr>
-                    <th>Rank</th>
-                    <td>#{{ submissionDetails.rank }}</td>
-                </tr>
-                <tr>
-                    <th>Votes</th>
-                    <td>{{ submissionDetails.votes }}</td>
-                </tr>
-            </table>
+        <div class="button-container">
+            <neu-button icon="thumb_up_alt" text="upvote"></neu-button>
+            <neu-button icon="report" text="Report" iconColor="red"></neu-button>
         </div>
+        <details-table :details="submissionDetails"></details-table>
     </div>
 </template>
 
 <script>
 import VideoElement from "@/components/shared/VideoElement.vue"
+import DetailsTable from "@/components/submission/DetailsTable.vue"
+import NeuButton from "@/components/shared/NeuButton.vue"
 
 export default {
     name: "SubmissionDetails",
     components: {
-        VideoElement
+        VideoElement,
+        DetailsTable,
+        NeuButton
     },
     data() {
         return {
@@ -82,25 +67,7 @@ export default {
     margin: 16px 0;
 }
 
-.table {
-    width: 90%;
-    border-spacing: 0;
-    margin: 0 auto;
-    border-radius: 20px;
-    background-color: #F1F5F8;
-    box-shadow: inset 10px 7px 11px #bfbcd9d9, inset -7px -6px 3px #ffffff;
-}
-
-tr {
-    height: 50px;
-}
-
-th {
-    width: 30%;
-}
-
-td {
-    padding-left: 20px;
-    text-align: left;
+.button-container {
+    margin: 20px 0;
 }
 </style>
