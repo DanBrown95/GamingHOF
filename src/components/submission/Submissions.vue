@@ -2,8 +2,8 @@
     <div class="container">
         <h3 class="label">{{label}}</h3>
         <div class="scroll-container">
-            <div v-for="item in items" :key="item.id" class="submission">
-                <Submission :model="item" :displayType="displayType"></Submission>
+            <div v-for="item in sortedItems" :key="item.id" class="submission">
+                <Submission :model="item" :topDisplayType="subTopDisplayType" :bottomDisplayType="subBottomDisplayType"></Submission>
             </div>
         </div> 
     </div>
@@ -14,13 +14,28 @@ import Submission from '@/components/submission/Submission.vue'
 
 export default {
     name: "submission-list",
-    props: ['items', 'label', 'displayType'],
+    props: ['items', 'label', 'sortBy', "subTopDisplayType", "subBottomDisplayType"],
     components: {
         Submission
     },
     data() {
         return {
-            
+
+        }
+    },
+    computed: {
+        sortedItems(){
+            switch (this.sortBy.toLowerCase()) {
+                case "rank":
+                    return this.items.slice().sort(function(a, b) {
+                                return a.rank - b.rank;
+                            });
+                case "month":
+                    //tbi
+                    return this.items;        
+                default:
+                    return this.items;
+            }
         }
     }
 }
@@ -43,7 +58,8 @@ export default {
         background: transparent;
         height: 80%;
         overflow-y: hidden;
-        
+        text-align: left;
+
         /* hide horizontal scroll bar in IE and Firefox */
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */

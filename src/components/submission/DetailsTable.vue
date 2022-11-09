@@ -3,15 +3,15 @@
         <table class="table">
             <tr>
                 <th>Creator</th>
-                <td>{{ details.creator }}</td>
+                <td>{{ details.creator.fullname }}</td>
             </tr>
             <tr>
-                <th>Console</th>
-                <td>{{ details.console }}</td>
+                <th>Platform</th>
+                <td>{{ details.platform }}</td>
             </tr>
             <tr>
                 <th>Date</th>
-                <td>{{ details.date }}</td>
+                <td>{{ details.submitted }}</td>
             </tr>
             <tr>
                 <th>Rank</th>
@@ -30,7 +30,9 @@ export default {
     name: 'DetailsTable',
     props: {
         details: {
-            creator: String,
+            creator: {
+                fullname: String
+            },
             console: String,
             date: String,
             rank: Number,

@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div v-if="submissionDetails">
         <div class="center">
-            <p class="title">{{ submissionDetails.title }}</p>
+            <p class="title">{{ submissionDetails.name }}</p>
         </div>
-        <video-element class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
+        <video-element v-if="submissionDetails.url" class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
         <div class="button-container">
             <neu-button @click="voteClicked" icon="thumb_up_alt" text="upvote"></neu-button>
             <neu-button @click="reportClicked" icon="report" text="Report" iconColor="red"></neu-button>
@@ -11,11 +11,13 @@
         <details-table :details="submissionDetails"></details-table>
     </div>
 </template>
-
+    
 <script>
 import VideoElement from "@/components/shared/VideoElement.vue"
 import DetailsTable from "@/components/submission/DetailsTable.vue"
 import NeuButton from "@/components/shared/NeuButton.vue"
+
+import { GetSubmissionById as _submissionRepo_GetById } from "@/store/submission/repository.js";
 
 export default {
     name: "SubmissionDetails",
@@ -26,19 +28,27 @@ export default {
     },
     data() {
         return {
+            detailsLoaded: false,
             customPlayerStyle: {
                 height: "400px",
                 width: "600px",
                 cornerRadius: "20px"
             },
-            submissionDetails: { creator: 'Bob', date: '12/10/2022', console: 'xbox', title: 'WTF PWNED', votes: 234553, rank: '2', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8' },
+            submissionDetails: null,
         }
     },
     mounted() {
         // Get details from id and populate submission details.
         // pass url to videoPlayer
+        var id = this.$route.params.id
+        this.populateDetails(id)
     },
     methods: {
+        async populateDetails(id){
+            var details = await _submissionRepo_GetById(id)
+            this.submissionDetails = details
+            this.detailsLoaded = true
+        },
         voteClicked(){
             console.log("voted");
         },

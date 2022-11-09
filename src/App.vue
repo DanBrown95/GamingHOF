@@ -5,7 +5,7 @@
 
 		<!-- Content -->
     <div class="content">
-      <router-view />
+      <router-view :key="$route.path"/>
     </div>
 	</div>
 </template>

@@ -1,11 +1,11 @@
 <template>
     <router-link :to="{name: 'submissionDetails', params: { id: model.id }}">
         <div class="outer">
-            <div class="top-title">{{top}}</div>
+            <div v-if="top" class="top-title">{{top}}</div>
             <img class="sub-image"
                 :src="friendlyImageUrl" />
             <!--overlay title-->
-            <div class="bottom-title">{{bottom}}</div>
+            <div v-if="bottom" class="bottom-title">{{bottom}}</div>
         </div>
     </router-link>
 </template>
@@ -13,20 +13,49 @@
 <script>
 export default {
     name: 'submission-item',
-    props: ['model', 'displayType'],
+    props: ['model', 'bottomDisplayType', 'topDisplayType'],
     computed: {
         top(){
-            if(this.displayType && this.displayType == "rank"){
-                return "#" + this.model.rank + ": " + this.model.votes + " votes";
-            }else if(this.displayType == "month"){
-                return this.model.month.toUpperCase();
-            }else if (this.displayType == "creator"){
-                return this.model.creator;
+            if(this.topDisplayType){
+                switch (this.topDisplayType.toLowerCase()) {
+                    case "name":
+                        return this.model.name
+                    case "rank":
+                        return "#" + this.model.rank
+                    case "votes":
+                        return this.model.votes + " votes"
+                    case "rankandvotes":
+                        return "#" + this.model.rank + ": " + this.model.votes + " votes"
+                    case "month":
+                        return this.model.month.toUpperCase()
+                    case "creator":
+                        return this.model.creator.fullname
+                    default:
+                        return null;
+                }
             }
-            return "";
+            return null
         },
         bottom(){
-            return this.model.title;
+            if(this.bottomDisplayType){
+                switch (this.bottomDisplayType.toLowerCase()) {
+                    case "name":
+                        return this.model.name
+                    case "rank":
+                        return "#" + this.model.rank
+                    case "votes":
+                        return this.model.votes + " votes"
+                    case "rankandvotes":
+                        return "#" + this.model.rank + ": " + this.model.votes + " votes"
+                    case "month":
+                        return this.model.month.toUpperCase()
+                    case "creator":
+                        return this.model.creator.fullname
+                    default:
+                        return null;
+                }
+            }
+            return null
         },
         friendlyImageUrl() {
             if(this.model.image == null || this.model.image == "" || this.model.image.length < 1){
