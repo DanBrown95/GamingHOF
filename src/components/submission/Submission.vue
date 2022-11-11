@@ -1,11 +1,13 @@
 <template>
     <router-link :to="{name: 'submissionDetails', params: { id: model.id }}">
-        <div class="outer">
-            <div v-if="top" class="top-title">{{top}}</div>
-            <img class="sub-image"
-                :src="friendlyImageUrl" />
-            <!--overlay title-->
-            <div v-if="bottom" class="bottom-title">{{bottom}}</div>
+        <div class="neu-inset">
+            <div class="outer">
+                <div v-if="top" class="top-title">{{top}}</div>
+                <img class="sub-image"
+                    :src="friendlyImageUrl" />
+                <!--overlay title-->
+                <div v-if="bottom" class="bottom-title">{{bottom}}</div>
+            </div>
         </div>
     </router-link>
 </template>
@@ -74,9 +76,26 @@ export default {
 </script>
 
 <style scoped>
+    .neu-inset {
+        height: 100%;
+        position: relative;
+        border-radius: 15px;
+        border: solid 1px white;
+        overflow: hidden;
+
+        padding: 8px;
+        background: #ffffff;
+        box-shadow: inset 6px 6px 9px #c9c9c9,
+            inset -6px -6px 9px #ffffff;
+
+            
+    }
+
     .outer {
         height: 100%;
         position: relative;
+        border-radius: 15px;
+        overflow: hidden;
     }
 
     .sub-image {
@@ -93,7 +112,7 @@ export default {
 
         /* bottom margin is 0 so that it
             coincides with container's bottom margin*/
-        bottom: 1px;           
+        bottom: 0px;           
         color: white;
         width: 100%;
         font-size: 15px;
@@ -111,9 +130,9 @@ export default {
         /*positioned relative to parent div (container) */
         position: absolute;   
 
-        /* bottom margin is 0 so that it
+        /* top margin is 0 so that it
             coincides with container's bottom margin*/
-        top: 1px;           
+        top: 0px;           
         color: white;
         width: 100%;
         font-size: 15px;

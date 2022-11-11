@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-      <div v-for="items in groupedSubmissions" :key="items" style="height: 300px; margin: 20px 0;">
+      <div v-for="items in groupedSubmissions" :key="items" style="height: 350px; margin: 20px 0;">
         <SubmissionList :items="items" :label="items[0].platform" sortBy="rank" subTopDisplayType="rank" subBottomDisplayType="name"></SubmissionList>
       </div>
   </div>

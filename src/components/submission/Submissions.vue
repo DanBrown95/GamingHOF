@@ -90,7 +90,7 @@ export default {
     }
 
     .submission {
-        height: 80%;
+        height: 100%;
         padding: 0 5px;
         display: inline-block;
         align-items: center;
