@@ -1,11 +1,11 @@
 <template>
         <nav class="container" :style="{'height': height}">
             <ul>
-                <li><a href="">HOF Winners</a></li>
-                <li><a href="" class="active">All</a></li>
-                <li><a href="">XBOX</a></li>
-                <li><a hred="">Playstation</a></li>
-                <li><a href="">PC</a></li>
+                <li><a v-on:click="filterSelected($event, 'HOF Winners')">HOF Winners</a></li>
+                <li><a v-on:click="filterSelected($event, 'All')" class="active">All</a></li>
+                <li><a v-on:click="filterSelected($event, 'XBOX')">XBOX</a></li>
+                <li><a v-on:click="filterSelected($event, 'Playstation')">Playstation</a></li>
+                <li><a v-on:click="filterSelected($event, 'PC')">PC</a></li>
             </ul>
         </nav>
 </template>
@@ -25,6 +25,9 @@ export default {
     unmounted () {
     },
     methods:{
+        filterSelected: function(event, filter) {
+            this.$emit("filterSelected", filter.toUpperCase());
+        },
     }
 }
 </script>
@@ -50,6 +53,7 @@ nav {
 
 nav li {
     display: inline;
+    padding: 0 10px;
 }
 
 /* style the navbar links */
@@ -59,4 +63,7 @@ nav a {
   padding: 0.5rem 1rem;
 }
 
+a:hover {
+  cursor:pointer;
+ }
 </style>

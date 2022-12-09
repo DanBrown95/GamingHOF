@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="video" v-for="item in duplicatedList" :key="item.id">
+        <div class="video" v-for="item in filteredItems" :key="item.id">
             <submission :model="item" bottomDisplayType="name"></submission>
         </div>
     </div>
@@ -11,27 +11,19 @@ import Submission from '@/components/submission/Submission.vue'
 
 export default {
     name: "submission-grid",
-    props: ['items'],
+    props: ['items', 'filter'],
     data() {
         return {
             
         }
     },
     computed: {
-        duplicatedList() {
-            let result = [...this.items]; // start with a copy of the original list
-
-            // use a for loop to repeat the duplication process four times
-            for (let i = 0; i < 3; i++) {
-                // use the map() method to iterate over the result array
-                // and return a new list containing copies of the original objects
-                const duplicates = result.map(obj => Object.assign({}, obj));
-
-                // use the concat() method to combine the result array with the new list of duplicates
-                result = result.concat(duplicates);
-            }
-
-            return result;
+        filteredItems() {
+            if (this.filter === "" || this.filter === "ALL" || this.filter == null) {
+                return this.items;
+            }else{
+                return this.items.filter(o => o.platform.toUpperCase() === this.filter);
+            }            
         }
     },
     components: {
