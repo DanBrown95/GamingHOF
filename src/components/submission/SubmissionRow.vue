@@ -1,7 +1,10 @@
 <template>
     <div class="container">
-        <h3 class="label">{{label}}</h3>
+        <h3 v-if="!sideLabel" class="label">{{labelFriendly}}</h3>
         <div class="scroll-container">
+            <div v-if="sideLabel" class="side-label-outer">
+                <h3 class="rotated-text">{{labelFriendly}}</h3>
+            </div>
             <div v-for="item in sortedItems" :key="item.id" class="submission">
                 <Submission :model="item" :topDisplayType="subTopDisplayType" :bottomDisplayType="subBottomDisplayType"></Submission>
             </div>
@@ -13,8 +16,15 @@
 import Submission from '@/components/submission/Submission.vue'
 
 export default {
-    name: "submission-list",
-    props: ['items', 'label', 'sortBy', "subTopDisplayType", "subBottomDisplayType"],
+    name: "submission-row",
+    props: {
+        items: {},
+        label: String,
+        sortBy: String,
+        subTopDisplayType: String,
+        subBottomDisplayType: String,
+        sideLabel: Boolean
+    },
     components: {
         Submission
     },
@@ -27,15 +37,18 @@ export default {
         sortedItems(){
             switch (this.sortBy.toLowerCase()) {
                 case "rank":
-                    return this.items.slice().sort(function(a, b) {
-                                return a.rank - b.rank;
-                            });
-                case "month":
-                    //tbi
-                    return this.items;        
+                    return this.items.slice().sort((a, b) => a.rank - b.rank)
+                case "votes":
+                    return this.items.slice().sort((a, b) => b.votes - a.votes)
                 default:
                     return this.items;
             }
+        },
+        labelFriendly() {
+            if(this.label){
+                return this.label.toUpperCase()
+            }
+            return ""
         }
     }
 }
@@ -44,6 +57,22 @@ export default {
 <style scoped>
     .container {
         height: 100%;
+    }
+
+    .side-label-outer {
+        display: inline-block; 
+        width: 50px; 
+        height: 100%; 
+        position: relative;
+    }
+
+    .rotated-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+        -webkit-transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+        transform:  translateX(-50%) translateY(-50%) rotate(-90deg);
     }
 
     h3 {
@@ -91,6 +120,7 @@ export default {
 
     .submission {
         height: 100%;
+        aspect-ratio: 16 / 9;
         padding: 0 5px;
         display: inline-block;
         align-items: center;

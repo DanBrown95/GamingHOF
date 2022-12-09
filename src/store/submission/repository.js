@@ -26,6 +26,19 @@ export function GetSubmissionById(id) {
         .catch(error => console.log(JSON.stringify(error.response.data.errors)))
 }
 
+export function GetSubmissionsByCreator(id) {
+    return axios({
+        url: 'https://localhost:44318/api/submission/GetAllByCreator',
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify(id)
+    })
+        .then(response => { return response.data; })
+        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
+}
+
 export function GetAllSubmissionsIncludingCreator() {
     return axios({
         url: 'https://localhost:44318/api/submission/GetAllIncludingCreator',

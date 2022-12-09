@@ -15,7 +15,11 @@
 <script>
 export default {
     name: 'submission-item',
-    props: ['model', 'bottomDisplayType', 'topDisplayType'],
+    props: {
+        model: {},
+        topDisplayType: String,
+        bottomDisplayType: String 
+    },
     computed: {
         top(){
             if(this.topDisplayType){
@@ -95,13 +99,14 @@ export default {
         height: 100%;
         position: relative;
         border-radius: 15px;
-        overflow: hidden;
+        display: flex; /* use flexbox layout for the div */
+        align-items: center; /* center the items horizontally and vertically */
+        overflow: hidden; /* hide any overflow */
     }
 
     .sub-image {
-        width: auto;
-        height: 100%;
-        display: block;
+        width: 100%;
+        min-height: 100%;
     }
 
     .bottom-title {

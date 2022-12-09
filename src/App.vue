@@ -53,16 +53,14 @@ body {
 }
 
 html, body {
-  height: 100%;
   margin: 0px;
 }
 
 .content {
   width: 100%;
-  height: 100%;
   margin-left: calc(2rem + 32px);
   transition: 0.2s ease-in-out;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
  button {

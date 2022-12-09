@@ -10,6 +10,11 @@ const routes = [
     path: '/submission/:id',
     name: 'submissionDetails',
     component: () => import(/* webpackChunkName: "about" */ '../views/SubmissionDetails.vue')
+  },
+  {
+    path: '/creator/:id',
+    name: 'creatorHome',
+    component: () => import('../views/creator/CreatorHomeView.vue')
   }
 ]
 
