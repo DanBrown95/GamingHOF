@@ -1,7 +1,7 @@
 <template>
   <div class="home">
       <div v-for="items in groupedSubmissions" :key="items" style="height: 250px; margin: 20px 0; margin-left: 85px;">
-        <SubmissionRow :items="items" :label="items[0].platform" sortBy="votes" subTopDisplayType="rank" subBottomDisplayType="name"></SubmissionRow>
+        <SubmissionRow :items="items" :label="platformIdToPlatform(items[0].platformId)" sortBy="votes" subTopDisplayType="rank" subBottomDisplayType="name" limit="8"></SubmissionRow>
       </div>
   </div>
 </template>
@@ -29,9 +29,23 @@ export default {
       var submissions = await _submissionRepo_GetAll();
 
       const byGroup = fn => [(acc, item) => ((acc[fn(item)] ??= []).push(item), acc), {}];
-      var grouped = submissions.reduce(...byGroup(x => x.platform));
+      var grouped = submissions.reduce(...byGroup(x => x.platformId));
 
       this.groupedSubmissions = grouped;
+    },
+    platformIdToPlatform(id){
+      switch (id) {
+        case 1:
+          return "XBOX"
+        case 2:
+          return "PLAYSTATION"
+        case 4:
+          return "PC"
+        case 8: 
+          return "SWITCH"
+        case 16:
+          return "MOBILE"
+      }
     }
   }
 

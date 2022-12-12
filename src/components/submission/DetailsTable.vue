@@ -4,13 +4,17 @@
             <tr>
                 <th>Creator</th>
                 <td><router-link :to="{name: 'creatorHome', params: { id: details.creator.id }}">
-                        {{ details.creator.fullname }}
+                        {{ details.creator.gamertag }}
                     </router-link>
                 </td>
             </tr>
             <tr>
+                <th>Game</th>
+                <td>{{ details.game.name }}</td>
+            </tr>
+            <tr>
                 <th>Platform</th>
-                <td>{{ details.platform }}</td>
+                <td>{{ details.platform.name }}</td>
             </tr>
             <tr>
                 <th>Rank</th>

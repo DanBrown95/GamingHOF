@@ -3,8 +3,8 @@
         <div id="user-image-section">
           <img :src="creatorDetails.bannerImage" />
         </div>
-        <StickyToolbar height="100px" @filterSelected="toolBarFilterSelected"></StickyToolbar>
-        <SubmissionGrid :items="submissions" :filter="submissionFilter"></SubmissionGrid>
+        <StickyToolbar :gameFilters="gameFilters" @gameFilterChanged="gameFilterChanged" height="100px" @filterSelected="toolBarFilterSelected"></StickyToolbar>
+        <SubmissionGrid :items="submissions" :filter="clickedSubmissionFilterLink" :gameIdFilter="selectedFilterGameId"></SubmissionGrid>
     </div>
 </template>
 
@@ -25,7 +25,11 @@ export default {
         return {
             submissions: [],
             creatorDetails: {},
-            submissionFilter: ""
+            clickedSubmissionFilterLink: "",
+            gameFilters: [],
+
+            // id of the game selected in the game frilter dropdown. pass to grid to filter the results
+            selectedFilterGameId: null
         }
     },
     mounted() {
@@ -36,12 +40,16 @@ export default {
     methods: {
         async populateSubmissions(id){
             this.submissions = await _submissionRepo_GetAllByCreator(id);
+            this.gameFilters =  [... new Map(this.submissions.map((x) => x.game).map((item) => [item["name"], item])).values(),];
         },
         async retrieveCreatorDetails(id){
             this.creatorDetails = await _creatorRepo_GetDetails(id);
         },
         toolBarFilterSelected: function(e) {
-            this.submissionFilter = e
+            this.clickedSubmissionFilterLink = e
+        },
+        gameFilterChanged: function(gameId) {
+            this.selectedFilterGameId = gameId
         }
     }
 }

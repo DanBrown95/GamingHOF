@@ -35,7 +35,9 @@ export default {
                     case "month":
                         return this.model.month.toUpperCase()
                     case "creator":
-                        return this.model.creator.fullname
+                        return this.model.creator.gamertag
+                    case "game":
+                        return this.model.game.name
                     default:
                         return null;
                 }
@@ -56,7 +58,9 @@ export default {
                     case "month":
                         return this.model.month.toUpperCase()
                     case "creator":
-                        return this.model.creator.fullname
+                        return this.model.creator.gamertag
+                    case "game":
+                        return this.model.game.name
                     default:
                         return null;
                 }

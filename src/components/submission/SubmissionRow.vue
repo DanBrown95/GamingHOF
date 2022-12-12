@@ -8,12 +8,16 @@
             <div v-for="item in sortedItems" :key="item.id" class="submission">
                 <Submission :model="item" :topDisplayType="subTopDisplayType" :bottomDisplayType="subBottomDisplayType"></Submission>
             </div>
+            <div v-if="addSeeMore" class="submission">
+                <SeeMoreTile :platform="label"></SeeMoreTile>
+            </div>
         </div> 
     </div>
 </template>
 
 <script>
 import Submission from '@/components/submission/Submission.vue'
+import SeeMoreTile from '@/components/submission/SeeMoreTile.vue'
 
 export default {
     name: "submission-row",
@@ -23,25 +27,40 @@ export default {
         sortBy: String,
         subTopDisplayType: String,
         subBottomDisplayType: String,
-        sideLabel: Boolean
+        sideLabel: Boolean,
+        limit: {
+            type: String,
+            default: "0"
+        }
     },
     components: {
-        Submission
+        Submission,
+        SeeMoreTile
     },
     data() {
         return {
+            seeMoreModel: {
 
+            }
         }
     },
     computed: {
+        addSeeMore() {
+            if(this.limit > 0 && this.limit < this.items.length){
+                return true
+            }else{
+                return false
+            }
+        },
         sortedItems(){
+            var lim = parseInt(this.limit) > 0 ? this.limit : this.items.length
             switch (this.sortBy.toLowerCase()) {
                 case "rank":
-                    return this.items.slice().sort((a, b) => a.rank - b.rank)
+                    return this.items.slice().sort((a, b) => a.rank - b.rank).slice(0, lim)
                 case "votes":
-                    return this.items.slice().sort((a, b) => b.votes - a.votes)
+                    return this.items.slice().sort((a, b) => b.votes - a.votes).slice(0, lim)
                 default:
-                    return this.items;
+                    return this.items.slice(0, lim);
             }
         },
         labelFriendly() {

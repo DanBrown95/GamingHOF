@@ -1,33 +1,50 @@
 <template>
         <nav class="container" :style="{'height': height}">
             <ul>
-                <li><a v-on:click="filterSelected($event, 'HOF Winners')">HOF Winners</a></li>
-                <li><a v-on:click="filterSelected($event, 'All')" class="active">All</a></li>
-                <li><a v-on:click="filterSelected($event, 'XBOX')">XBOX</a></li>
-                <li><a v-on:click="filterSelected($event, 'Playstation')">Playstation</a></li>
-                <li><a v-on:click="filterSelected($event, 'PC')">PC</a></li>
+                <li><a v-on:click="filterSelected($event, 'HOF Winners')" :class="{active: activeLink === 'HOF WINNERS'}">HOF Winners</a></li>
+                <li><a v-on:click="filterSelected($event, 'All')" :class="{active: activeLink == '' || activeLink === 'ALL'}">All</a></li>
+                <li><a v-on:click="filterSelected($event, 'XBOX')" :class="{active: activeLink === 'XBOX'}">Xbox</a></li>
+                <li><a v-on:click="filterSelected($event, 'Playstation')" :class="{active: activeLink === 'PLAYSTATION'}">Playstation</a></li>
+                <li><a v-on:click="filterSelected($event, 'PC')" :class="{active: activeLink === 'PC'}">PC</a></li>
+                <li><v-select class="game-select" :options="gameFilters" label="name" v-model="selectedGameFilter" :resetOnOptionsChange="true" placeholder="Filter by Game"></v-select>
+                </li>
             </ul>
         </nav>
 </template>
 
 <script>
+import 'vue-select/dist/vue-select.css';
+import vSelect from 'vue-select'
+
 export default {
     name: "StickyNav",
     props: {
-        height: String
+        height: String,
+        gameFilters: {}
+    },
+    components: {
+        vSelect
     },
     data() {
         return {
+            activeLink: "",
+            selectedGameFilter: null
         }
-    },
-    mounted () {
-    },
-    unmounted () {
     },
     methods:{
         filterSelected: function(event, filter) {
             this.$emit("filterSelected", filter.toUpperCase());
-        },
+            this.activeLink = filter.toUpperCase();
+        }
+    },
+    watch: {
+        selectedGameFilter(game){
+            if(game){
+                this.$emit("gameFilterChanged", game.id);
+            }else{
+                this.$emit("gameFilterChanged", null);
+            }
+        }
     }
 }
 </script>
@@ -65,5 +82,14 @@ nav a {
 
 a:hover {
   cursor:pointer;
+ }
+
+ .active {
+    color: green;
+ }
+
+ .game-select {
+    display: inline-block;
+    min-width: 250px;
  }
 </style>

@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-export function GetSubmissionsByPlatform(platform) {
+export function GetSubmissionsByPlatform(platformId) {
     return axios({
         url: 'https://localhost:44318/api/submission/GetSubmissionsByPlatform',
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
-        data: JSON.stringify(platform)
+        data: JSON.stringify(platformId)
     })
         .then(response => { return response.data; })
         .catch(error => console.log(JSON.stringify(error.response.data.errors)))

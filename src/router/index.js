@@ -15,6 +15,11 @@ const routes = [
     path: '/creator/:id',
     name: 'creatorHome',
     component: () => import('../views/creator/CreatorHomeView.vue')
+  },
+  {
+    path: '/creator/:platform',
+    name: 'seeMore',
+    component: () => import('../views/creator/CreatorHomeView.vue')
   }
 ]
 
