@@ -5,8 +5,8 @@
         </div>
         <video-element v-if="submissionDetails.url" class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
         <div class="button-container">
-            <neu-button @click="voteClicked" icon="thumb_up_alt" text="upvote"></neu-button>
-            <neu-button @click="reportClicked" icon="report" text="Report" iconColor="red"></neu-button>
+            <neu-button id="upvoteBtn" @click="voteClicked" :icon="voteIcon" :text="voteText"></neu-button>
+            <neu-button id="reportBtn" @click="reportClicked" icon="report" text="Report" iconColor="red"></neu-button>
         </div>
         <details-table :details="submissionDetails"></details-table>
     </div>
@@ -17,7 +17,8 @@ import VideoElement from "@/components/shared/VideoElement.vue"
 import DetailsTable from "@/components/submission/DetailsTable.vue"
 import NeuButton from "@/components/shared/NeuButton.vue"
 
-import { GetSubmissionById as _submissionRepo_GetById } from "@/store/submission/repository.js";
+import { GetSubmissionById as _submissionRepo_GetById, 
+        VoteForSubmission as _submissionRepo_vote } from "@/store/submission/repository.js";
 
 export default {
     name: "SubmissionDetails",
@@ -35,6 +36,10 @@ export default {
                 cornerRadius: "20px"
             },
             submissionDetails: null,
+            
+            voteEnabled: true,
+            voteIcon: "thumb_up_alt",
+            voteText: "upvote",
         }
     },
     mounted() {
@@ -49,8 +54,22 @@ export default {
             this.submissionDetails = details
             this.detailsLoaded = true
         },
-        voteClicked(){
-            console.log("voted");
+        async voteClicked(){
+            if(!this.voteEnabled){
+                return;
+            }
+            console.log("enabled");
+            var success =  await _submissionRepo_vote('222222222',this.submissionDetails.id);
+            if(success == true){
+                var id = this.$route.params.id
+                await this.populateDetails(id);
+
+                //disable the vote button
+                this.voteEnabled = false;
+                document.getElementById("upvoteBtn").classList.add("disabled");
+                this.voteIcon = "check";
+                this.voteText = "voted";
+            }
         },
         reportClicked(){
             console.log("reported");

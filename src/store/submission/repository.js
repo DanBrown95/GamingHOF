@@ -63,6 +63,19 @@ export function GetAllSubmissions() {
         .catch(error => console.log(JSON.stringify(error.response.data.errors)))
 }
 
+export function VoteForSubmission(userId, submissionId) {
+    return axios({
+        url: 'https://localhost:44318/api/submission/upvote',
+        method: 'POST',
+        headers: {
+            //"Authorization": `Bearer ${accessToken}`
+            "Content-Type": "application/json"
+        },
+        data: { userId, submissionId }
+    })
+        .then(response => { return response.data; })
+        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
+}
 
 // export function PhoneConfirmation(userId, accessToken){
 //     return axios({

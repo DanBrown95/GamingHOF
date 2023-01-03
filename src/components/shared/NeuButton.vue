@@ -126,8 +126,11 @@ export default {
         box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, inset rgba(60, 64, 67, .15) 0 2px 20px 0;
     }
 
-    .button:disabled {
-        box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    a.disabled {
+        /* box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px; */
+        box-shadow: none !important;
+        cursor: default !important;
+        background-color: lightgray !important;
     }
 
 </style>
