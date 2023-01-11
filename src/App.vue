@@ -12,7 +12,7 @@
 
 
 <script>
-import Sidebar from '@/components/SideBar.vue'
+import Sidebar from '@/components/shared/SideBar.vue'
 
 export default {
   name: "App",
@@ -35,6 +35,14 @@ export default {
 <style>
 body {
   background-color: #F1F5F8;
+}
+
+body.darkMode {
+  background-color: black;
+}
+
+.darkMode h3 {
+  color: white;
 }
 
 * {

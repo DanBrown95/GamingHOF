@@ -4,7 +4,7 @@
             <submission :model="item" bottomDisplayType="name" topDisplayType="game"></submission>
         </div>
         <div v-show="filteredItems.length < 1">
-            <h2 class="no-content">No content</h2>
+            <h3 class="no-content">No content</h3>
         </div>
     </div>
 </template>
@@ -54,7 +54,7 @@ export default {
         margin: 5px 10px;
     }
 
-    h2.no-content {
+    h3.no-content {
         margin-top: 20px;
     }
 </style>

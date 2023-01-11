@@ -1,6 +1,8 @@
 
 <template>
 	<aside :class="`${is_expanded ? 'is-expanded' : ''}`">
+		<popup-modal :showModal="showModal" @close="modalClosed"></popup-modal>
+
 		<div class="logo">
 			<router-link :to="{name: 'home'}">
 				<img :src="logoURL" alt="Vue" /> 
@@ -34,32 +36,78 @@
 		<div class="flex"></div>
 		
 		<div class="menu">
-            <router-link to="/about" class="button">
-				<span class="material-icons">description</span>
-				<span class="text">About</span>
+			<router-link v-if="isLoggedIn" to="/myChannel" class="button">
+				<span class="material-icons">portrait</span>
+				<span class="text">Your Channel</span>
 			</router-link>
-			<router-link to="/contact" class="button">
-				<span class="material-icons">email</span>
-				<span class="text">Contact</span>
+			<router-link v-if="isLoggedIn" to="/account" class="button">
+				<span class="material-icons">account_circle</span>
+				<span class="text">Account</span>
 			</router-link>
-			<router-link to="/settings" class="button">
+            <a v-if="!isLoggedIn" @click="Login" class="button">
+				<span class="material-icons">login</span>
+				<span class="text">Login</span>
+			</a>
+			<router-link v-if="!isLoggedIn" to="/signup" class="button">
+				<span class="material-icons">login</span>
+				<span class="text">Signup</span>
+			</router-link>
+			<a v-if="isLoggedIn" @click="Logout" class="button">
+				<span class="material-icons">logout</span>
+				<span class="text">Logout</span>
+			</a>
+			<hr />
+			<a to="/settings" @click="ShowSettings" class="button">
 				<span class="material-icons">settings</span>
 				<span class="text">Settings</span>
-			</router-link>
+			</a>
 		</div>
 	</aside>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue'
-import logoURL from '../assets/logo.png'
+import { useStore } from 'vuex';
+import { mapState } from 'vuex';
+import logoURL from '../../assets/logo.png'
 
-const is_expanded = ref(localStorage.getItem("shrink") !== "true")
+import PopupModal from "@/components/shared/PopupModal.vue"
 
-const ToggleMenu = () => {
-	is_expanded.value = !is_expanded.value
-	localStorage.setItem("shrink", is_expanded.value)
-}
+export default {
+	components: {
+		PopupModal
+	},
+	computed: mapState({
+		isLoggedIn: state => state.isLoggedIn,
+	}),
+	setup() {
+		const store = useStore();
+		const is_expanded = ref(localStorage.getItem("shrink") !== "true")
+		const Login = () => {
+			store.dispatch('login');
+		};
+
+		const Logout = () => {
+			store.dispatch('logout');
+		};
+
+		const ToggleMenu = () => {
+			is_expanded.value = !is_expanded.value
+			localStorage.setItem("shrink", is_expanded.value)
+		};
+
+		const showModal = ref(false)
+		const ShowSettings = () => {
+			showModal.value = true;
+		}
+
+		const modalClosed = () => {
+			showModal.value = false
+		}
+
+		return { Login, Logout, ToggleMenu, logoURL, is_expanded, ShowSettings, showModal, modalClosed };
+	}
+};
 </script>
 
 <style>
@@ -188,5 +236,9 @@ aside h2.company-name {
  aside.is-expanded + .content {
 	margin-left: 300px;
 	transition: 0.2s ease-in-out;
+ }
+
+ a:hover {
+	cursor: pointer;
  }
 </style>

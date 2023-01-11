@@ -85,7 +85,7 @@ export default {
     padding: 10px 50px;
     border-radius: 20px;
     background-color: #F1F5F8;
-    box-shadow: 8px 8px 12px #5d5a5a, -8px -8px 12px #ffffff;
+    box-shadow: 8px 8px 12px #5d5a5a;
 }
 
 .center {
