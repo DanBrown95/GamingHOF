@@ -20,6 +20,16 @@ const routes = [
     path: '/creator/:platform',
     name: 'seeMore',
     component: () => import('../views/creator/CreatorHomeView.vue')
+  },
+  {
+    path: '/HOF',
+    name: 'hof',
+    component: () => import('../views/HOF.vue')
+  },
+  {
+    path: '/Platforms',
+    name: 'platforms',
+    component: () => import('../views/Platforms.vue')
   }
 ]
 

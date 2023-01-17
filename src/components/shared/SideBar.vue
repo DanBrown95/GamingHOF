@@ -5,11 +5,9 @@
 
 		<div class="logo">
 			<router-link :to="{name: 'home'}">
-				<img :src="logoURL" alt="Vue" /> 
+				<img :src="is_expanded ? logoURL : smallLogoUrl" alt="Vue" /> 
 			</router-link>
 		</div>
-
-		<h2 class="company-name">Gaming HOF</h2>
 
 		<div class="menu-toggle-wrap">
 			<button class="menu-toggle" @click="ToggleMenu">
@@ -23,11 +21,11 @@
 				<span class="material-icons">home</span>
 				<span class="text">Home</span>
 			</router-link>
-            <router-link to="/hof" class="button">
+            <router-link :to="{name: 'hof'}" class="button">
 				<span class="material-icons">workspace_premium</span>
 				<span class="text">HOF</span>
 			</router-link>
-			<router-link to="/platforms" class="button">
+			<router-link :to="{name: 'platforms'}" class="button">
 				<span class="material-icons">sports_esports</span>
 				<span class="text">Vote - Platforms</span>
 			</router-link>
@@ -70,6 +68,7 @@ import { ref } from 'vue'
 import { useStore } from 'vuex';
 import { mapState } from 'vuex';
 import logoURL from '../../assets/logo.png'
+import smallLogoUrl from '../../assets/just-logo.png'
 
 import PopupModal from "@/components/shared/PopupModal.vue"
 
@@ -105,7 +104,7 @@ export default {
 			showModal.value = false
 		}
 
-		return { Login, Logout, ToggleMenu, logoURL, is_expanded, ShowSettings, showModal, modalClosed };
+		return { Login, Logout, ToggleMenu, logoURL, smallLogoUrl, is_expanded, ShowSettings, showModal, modalClosed };
 	}
 };
 </script>
@@ -130,9 +129,10 @@ aside .flex {
 }
 aside .logo {
     margin-bottom: 1rem;
+	align-self: center;
 }
 aside .logo img {
-	width: 2rem;
+	width: 3em;
 }
 aside .menu-toggle-wrap {
     display: flex;
@@ -215,9 +215,11 @@ aside h2.company-name {
  aside.is-expanded {
 	width: 300px;
 }
- aside.is-expanded .menu-toggle-wrap {
-	top: -3rem;
+
+aside.is-expanded .logo img {
+	width: 11em;
 }
+
  aside.is-expanded .menu-toggle-wrap .menu-toggle {
 	transform: rotate(-180deg);
 }
