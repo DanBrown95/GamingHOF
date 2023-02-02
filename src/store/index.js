@@ -2,23 +2,23 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
-    isLoggedIn: false
+    isAuthenticated: false,
+    user: null
   },
   mutations: {
-    login(state, success) {
-      state.isLoggedIn = success;
+    setUser(state, user) {
+      state.user = user;
     },
-    logout(state) {
-      state.isLoggedIn = false;
-    }
+    setIsAuthenticated(state, isAuthenticated) {
+      state.isAuthenticated = isAuthenticated;
+    },
   },
   actions: {
-    login({ commit }) {
-      // TODO: verify user, and set the user object.
-      commit("login", true);
+    setUser({ commit }, user) {
+      commit('setUser', user);
     },
-    logout({ commit }) {
-      commit("logout");
-    }
+    setIsAuthenticated({ commit }, isAuthenticated) {
+      commit('setIsAuthenticated', isAuthenticated);
+    },
   }
 });

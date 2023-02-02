@@ -32,9 +32,9 @@ export default {
             default: '#3c4043'
         }
     },
-    data(){
-        return {
-            upperText: this.text.toUpperCase()
+    computed:{
+        upperText() {
+            return this.text.toUpperCase()
         }
     }
 }

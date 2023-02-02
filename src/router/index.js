@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { authGuard } from "@auth0/auth0-vue";
 
 const routes = [
   {
@@ -30,6 +31,12 @@ const routes = [
     path: '/Platforms',
     name: 'platforms',
     component: () => import('../views/Platforms.vue')
+  },
+  {
+    path: '/account',
+    name: "account",
+    component: () => import('../views/Account.vue'),
+    beforeEnter: authGuard,
   }
 ]
 

@@ -4,7 +4,7 @@
             <p class="title">{{ submissionDetails.name }}</p>
         </div>
         <video-element v-if="submissionDetails.url" class="video" :src="submissionDetails.url" :styleConfig="customPlayerStyle" :autoplay="true"></video-element>
-        <div class="button-container">
+        <div class="button-container" v-if="isLoggedIn">
             <neu-button id="upvoteBtn" @click="voteClicked" :icon="voteIcon" :text="voteText"></neu-button>
             <neu-button id="reportBtn" @click="reportClicked" icon="report" text="Report" iconColor="red"></neu-button>
         </div>
@@ -13,6 +13,8 @@
 </template>
     
 <script>
+import { mapState } from 'vuex';
+
 import VideoElement from "@/components/shared/VideoElement.vue"
 import DetailsTable from "@/components/submission/DetailsTable.vue"
 import NeuButton from "@/components/shared/NeuButton.vue"
@@ -27,6 +29,12 @@ export default {
         DetailsTable,
         NeuButton
     },
+    computed: {
+        ...mapState({
+			isLoggedIn: state => state.isAuthenticated,
+            user: state => state.user
+		})
+    },
     data() {
         return {
             detailsLoaded: false,
@@ -39,7 +47,7 @@ export default {
             
             voteEnabled: true,
             voteIcon: "thumb_up_alt",
-            voteText: "upvote",
+            voteText: "upvote"
         }
     },
     mounted() {
@@ -58,21 +66,28 @@ export default {
             if(!this.voteEnabled){
                 return;
             }
-            console.log("enabled");
+
             var success =  await _submissionRepo_vote('222222222',this.submissionDetails.id);
             if(success == true){
                 var id = this.$route.params.id
                 await this.populateDetails(id);
 
                 //disable the vote button
-                this.voteEnabled = false;
-                document.getElementById("upvoteBtn").classList.add("disabled");
+                this.disabledVoteButton();
                 this.voteIcon = "check";
                 this.voteText = "voted";
+            }else{
+                this.disabledVoteButton();
+                this.voteIcon = "error_outline";
+                this.voteText = "Already Voted";
             }
         },
         reportClicked(){
             console.log("reported");
+        },
+        disabledVoteButton(){
+            this.voteEnabled = false;
+            document.getElementById("upvoteBtn").classList.add("disabled");
         }
     }
 }

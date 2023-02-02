@@ -5,7 +5,7 @@
 
 		<div class="logo">
 			<router-link :to="{name: 'home'}">
-				<img :src="is_expanded ? logoURL : smallLogoUrl" alt="Vue" /> 
+				<img :src="logoUrl" alt="Vue" /> 
 			</router-link>
 		</div>
 
@@ -46,10 +46,6 @@
 				<span class="material-icons">login</span>
 				<span class="text">Login</span>
 			</a>
-			<router-link v-if="!isLoggedIn" to="/signup" class="button">
-				<span class="material-icons">login</span>
-				<span class="text">Signup</span>
-			</router-link>
 			<a v-if="isLoggedIn" @click="Logout" class="button">
 				<span class="material-icons">logout</span>
 				<span class="text">Logout</span>
@@ -64,50 +60,71 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useStore } from 'vuex';
 import { mapState } from 'vuex';
 import logoURL from '../../assets/logo.png'
 import smallLogoUrl from '../../assets/just-logo.png'
 
 import PopupModal from "@/components/shared/PopupModal.vue"
+import { useAuth0 } from '@auth0/auth0-vue';
 
 export default {
 	components: {
 		PopupModal
 	},
-	computed: mapState({
-		isLoggedIn: state => state.isLoggedIn,
-	}),
-	setup() {
-		const store = useStore();
-		const is_expanded = ref(localStorage.getItem("shrink") !== "true")
-		const Login = () => {
-			store.dispatch('login');
-		};
-
-		const Logout = () => {
-			store.dispatch('logout');
-		};
-
-		const ToggleMenu = () => {
-			is_expanded.value = !is_expanded.value
-			localStorage.setItem("shrink", is_expanded.value)
-		};
-
-		const showModal = ref(false)
-		const ShowSettings = () => {
-			showModal.value = true;
+	computed: {
+		...mapState({
+			isLoggedIn: state => state.isAuthenticated,
+		}),
+		logoUrl() {
+			return this.is_expanded ? logoURL : smallLogoUrl;
 		}
-
-		const modalClosed = () => {
-			showModal.value = false
+	},
+	data() {
+		return {
+			is_expanded: localStorage.getItem("shrink") !== "true",
+			showModal: false,
+			loginWithRedirect: null,
+			logout: null,
+			user: null,
+			isAuthenticated: false
+		};
+	},
+	methods: {
+		Login() {
+			this.loginWithRedirect();
+		},
+		Logout() {
+			this.logout({ logoutParams: { returnTo: window.location.origin } });
+		},
+		ToggleMenu() {
+			this.is_expanded = !this.is_expanded;
+			localStorage.setItem("shrink", this.is_expanded);
+		},
+		ShowSettings() {
+			this.showModal = true;
+		},
+		modalClosed() {
+			this.showModal = false;
+		},
+	},
+	created() {
+		const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+		this.loginWithRedirect = loginWithRedirect;
+		this.logout = logout;
+		this.user = user;
+		this.isAuthenticated = isAuthenticated;
+	},
+	watch: {
+		user(newV){
+			this.$store.dispatch('setUser', newV);
+		},
+		isAuthenticated(newV){
+			this.$store.dispatch('setIsAuthenticated', newV);
 		}
-
-		return { Login, Logout, ToggleMenu, logoURL, smallLogoUrl, is_expanded, ShowSettings, showModal, modalClosed };
 	}
 };
 </script>
+
 
 <style>
 aside {
