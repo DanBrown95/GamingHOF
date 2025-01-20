@@ -1,43 +1,27 @@
 <template>
-    <a @click="$emit('click')" class="button" :style="{'background-color': buttonColor}">
+    <a @click="$emit('clicked')" class="button" :style="{'background-color': buttonColor}">
         <span class="material-icons" :style="{'color': iconColor}">{{icon}}</span>
         <span class="text" :style="{'color': textColor}">{{upperText}}</span>
     </a>
 </template>
 
-<script>
+<script setup>
+import {defineProps, defineEmits, computed} from 'vue';
 
-export default {
-    name: 'NeuButton',
-    emits: ['click'],
-    props: {
-        text: {
-            type: String,
-            default: 'Upvote'
-        },
-        icon: {
-            type: String,
-            default: 'report' //'thumb_up_alt'
-        },
-        iconColor: {
-            type: String,
-            default: '#1899D6'
-        },
-        buttonColor: {
-            type: String,
-            default: '#fff'
-        },
-        textColor: {
-            type: String,
-            default: '#3c4043'
-        }
-    },
-    computed:{
-        upperText() {
-            return this.text.toUpperCase()
-        }
-    }
-}
+const props = defineProps({
+    text: String, 
+    icon: String, 
+    iconColor: String, 
+    buttonColor: String, 
+    textColor: String
+})
+
+defineEmits('clicked')
+
+const upperText = computed(() => {
+    return props.text.toUpperCase()
+})
+
 </script>
 
 <style scoped>

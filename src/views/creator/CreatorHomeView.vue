@@ -8,51 +8,51 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import {onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import StickyToolbar from '@/components/creator/StickyToolbar.vue'
 import SubmissionGrid from '@/components/submission/SubmissionGrid.vue'
 
 import { GetSubmissionsByCreator as _submissionRepo_GetAllByCreator } from "@/store/submission/repository.js";
 import { GetCreatorDetails as _creatorRepo_GetDetails } from "@/store/creator/repository.js"
 
-export default {
-    name: 'CreatorHomeView',
-    components: {
-        StickyToolbar,
-        SubmissionGrid
-    },
-    data() {
-        return {
-            submissions: [],
-            creatorDetails: {},
-            clickedSubmissionFilterLink: "",
-            gameFilters: [],
+let submissions = ref([])
+let creatorDetails = ref({})
+let clickedSubmissionFilterLink = ref("")
+let gameFilters = ref([])
+let selectedFilterGameId = ref(null)
 
-            // id of the game selected in the game frilter dropdown. pass to grid to filter the results
-            selectedFilterGameId: null
-        }
-    },
-    mounted() {
-        var id = this.$route.params.id
-        this.retrieveCreatorDetails(id);
-        this.populateSubmissions(id);
-    },
-    methods: {
-        async populateSubmissions(id){
-            this.submissions = await _submissionRepo_GetAllByCreator(id);
-            this.gameFilters =  [... new Map(this.submissions.map((x) => x.game).map((item) => [item["name"], item])).values(),];
-        },
-        async retrieveCreatorDetails(id){
-            this.creatorDetails = await _creatorRepo_GetDetails(id);
-        },
-        toolBarFilterSelected: function(e) {
-            this.clickedSubmissionFilterLink = e
-        },
-        gameFilterChanged: function(gameId) {
-            this.selectedFilterGameId = gameId
-        }
-    }
+// Access the route params
+const route = useRoute();
+
+onMounted(() => {
+    var id = route.params.id
+    retrieveCreatorDetails(id);
+    populateSubmissions(id);
+})
+
+async function populateSubmissions(id){
+    const response = await _submissionRepo_GetAllByCreator(id);
+    submissions.value = response;
+    gameFilters.value = [
+        ...new Map(response.map((x) => x.game).map((item) => [item["name"], item])).values()
+    ];
 }
+
+async function retrieveCreatorDetails(id){
+    creatorDetails.value = await _creatorRepo_GetDetails(id);
+}
+
+function toolBarFilterSelected(e) {
+    clickedSubmissionFilterLink.value = e
+}
+
+function gameFilterChanged(gameId) {
+    selectedFilterGameId.value = gameId
+}
+
+
 </script>
 
 <style scoped>

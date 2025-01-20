@@ -30,12 +30,12 @@ const routes = [
   {
     path: '/Platforms',
     name: 'platforms',
-    component: () => import('../views/Platforms.vue')
+    component: () => import('../views/PlatformsHome.vue')
   },
   {
     path: '/account',
     name: "account",
-    component: () => import('../views/Account.vue'),
+    component: () => import('../views/AccountHome.vue'),
     beforeEnter: authGuard,
   }
 ]

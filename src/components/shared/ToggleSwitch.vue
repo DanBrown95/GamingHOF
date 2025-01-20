@@ -5,26 +5,25 @@
     </label>
 </template>
 
-<script>
-export default {
-    name: "ToggleSwitch",
-    props: {
-        modelValue: {
-            type: Boolean,
-            default: false
-        }
-    },
-    computed: {
-        mutableValue: {
-            get(){
-                return this.modelValue;
-            },
-            set(val){
-                this.$emit('update:modelValue', val);
-            }
-        }
+<script setup>
+import { defineProps, defineEmits, computed } from 'vue';
+
+// Define props
+const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        default: false
     }
-}
+});
+
+// Define emits for the component
+const emit = defineEmits(['update:modelValue']);
+
+// Computed property for mutableValue
+const mutableValue = computed({
+    get: () => props.modelValue,
+    set: (val) => emit('update:modelValue', val)
+});
 </script>
 
 <style scoped>

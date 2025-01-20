@@ -11,25 +11,8 @@
 </template>
 
 
-<script>
+<script setup>
 import Sidebar from '@/components/shared/SideBar.vue'
-
-export default {
-  name: "App",
-  components: {
-    Sidebar
-  },
-  data: function () {
-    return {
-    }
-  },
-  mounted() {
-  },
-  watch: {
-  },
-  methods: {
-  }
-};
 </script>
 
 <style>

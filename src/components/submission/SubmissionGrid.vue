@@ -9,36 +9,25 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import {defineProps, computed} from 'vue';
 import Submission from '@/components/submission/Submission.vue'
 
-export default {
-    name: "submission-grid",
-    props: ['items', 'filter', 'gameIdFilter'],
-    data() {
-        return {
-            
+const props = defineProps(['items', 'filter', 'gameIdFilter'])
+
+const filteredItems = computed(() => {
+    if (props.filter === "" || props.filter === "ALL" || props.filter == null) {
+        if(props.gameIdFilter && props.gameIdFilter > 0){
+            return props.items.filter(x => x.game.id == props.gameIdFilter)
         }
-    },
-    computed: {
-        filteredItems() {
-            if (this.filter === "" || this.filter === "ALL" || this.filter == null) {
-                if(this.gameIdFilter && this.gameIdFilter > 0){
-                    return this.items.filter(x => x.game.id == this.gameIdFilter)
-                }
-                return this.items;
-            }else{
-                if(this.gameIdFilter && this.gameIdFilter > 0){
-                    return this.items.filter(o => o.platform.name.toUpperCase() === this.filter && o.game.id == this.gameIdFilter);
-                }
-                return this.items.filter(o => o.platform.name.toUpperCase() === this.filter);
-            }  
+        return props.items;
+    }else{
+        if(props.gameIdFilter && props.gameIdFilter > 0){
+            return props.items.filter(o => o.platform.name.toUpperCase() === props.filter && o.game.id == props.gameIdFilter);
         }
-    },
-    components: {
-        Submission
-    }
-}
+        return props.items.filter(o => o.platform.name.toUpperCase() === props.filter);
+    }  
+})
 </script>
 
 <style scoped>

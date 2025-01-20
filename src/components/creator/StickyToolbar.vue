@@ -6,47 +6,40 @@
                 <li><a v-on:click="filterSelected($event, 'XBOX')" :class="{active: activeLink === 'XBOX'}">Xbox</a></li>
                 <li><a v-on:click="filterSelected($event, 'Playstation')" :class="{active: activeLink === 'PLAYSTATION'}">Playstation</a></li>
                 <li><a v-on:click="filterSelected($event, 'PC')" :class="{active: activeLink === 'PC'}">PC</a></li>
-                <li><v-select class="game-select" :options="gameFilters" label="name" v-model="selectedGameFilter" :resetOnOptionsChange="true" placeholder="Filter by Game"></v-select>
+                <li><vSelect class="game-select" :options="gameFilters" label="name" v-model="selectedGameFilter" :resetOnOptionsChange="true" placeholder="Filter by Game"></vSelect>
                 </li>
             </ul>
         </nav>
 </template>
 
-<script>
+<script setup>
+import {defineProps, ref, defineEmits, watch} from 'vue';
 import 'vue-select/dist/vue-select.css';
 import vSelect from 'vue-select'
 
-export default {
-    name: "StickyNav",
-    props: {
-        height: String,
-        gameFilters: {}
-    },
-    components: {
-        vSelect
-    },
-    data() {
-        return {
-            activeLink: "",
-            selectedGameFilter: null
-        }
-    },
-    methods:{
-        filterSelected: function(event, filter) {
-            this.$emit("filterSelected", filter.toUpperCase());
-            this.activeLink = filter.toUpperCase();
-        }
-    },
-    watch: {
-        selectedGameFilter(game){
-            if(game){
-                this.$emit("gameFilterChanged", game.id);
-            }else{
-                this.$emit("gameFilterChanged", null);
-            }
-        }
-    }
+defineProps({
+    height: String,
+    gameFilters: {}
+})
+
+const emit = defineEmits(['filterSelected','gameFilterChanged'])
+
+const activeLink = ref("")
+const selectedGameFilter = ref(null)
+
+function filterSelected(event, filter){
+    emit("filterSelected", filter.toUpperCase());
+    activeLink.value = filter.toUpperCase();
 }
+
+watch(selectedGameFilter, (game) => {
+    if(game){
+        emit("gameFilterChanged", game.id);
+    }else{
+        emit("gameFilterChanged", null);
+    }
+})
+
 </script>
 
 <style scoped>

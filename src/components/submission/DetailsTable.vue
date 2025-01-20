@@ -32,42 +32,38 @@
     </div>    
 </template>
 
-<script>
-export default {
-    name: 'DetailsTable',
-    props: {
-        details: {
-            creator: {
-                id: String,
-                fullname: String
-            },
-            console: String,
-            submitted: String,
-            rank: Number,
-            votes: Number
-        }
-    },
-    setup() {
-        
-    },
-    computed: {
-        localTime(){
-            return new Date(this.details.submitted).toDateString()
+<script setup>
+import {defineProps, computed} from 'vue';
+
+const props = defineProps({
+    details: {
+        creator: {
+            id: String,
+            fullname: String
         },
-        rankColor(){
-            switch (this.details.rank) {
-                case 1:
-                    return "goldenrod"
-                case 2:
-                    return "#C0C0C0"
-                case 3: 
-                    return "#CD7F32"
-                default:
-                    return ""
-            }
-        }
+        console: String,
+        submitted: String,
+        rank: Number,
+        votes: Number
     }
-}
+})
+
+const localTime = computed(() => {
+    return new Date(props.details.submitted).toDateString()
+})
+
+const rankColor = computed(() => {
+    switch (props.details.rank) {
+        case 1:
+            return "goldenrod"
+        case 2:
+            return "#C0C0C0"
+        case 3: 
+            return "#CD7F32"
+        default:
+            return ""
+    }
+})
 </script>
 
 <style scoped>

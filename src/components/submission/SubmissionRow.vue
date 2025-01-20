@@ -15,62 +15,50 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import {computed, defineProps} from 'vue';
 import Submission from '@/components/submission/Submission.vue'
 import SeeMoreTile from '@/components/submission/SeeMoreTile.vue'
 
-export default {
-    name: "submission-row",
-    props: {
-        items: {},
-        label: String,
-        sortBy: String,
-        subTopDisplayType: String,
-        subBottomDisplayType: String,
-        sideLabel: Boolean,
-        limit: {
-            type: String,
-            default: "0"
-        }
-    },
-    components: {
-        Submission,
-        SeeMoreTile
-    },
-    data() {
-        return {
-            seeMoreModel: {
-
-            }
-        }
-    },
-    computed: {
-        addSeeMore() {
-            if(this.limit > 0 && this.limit < this.items.length){
-                return true
-            }else{
-                return false
-            }
-        },
-        sortedItems(){
-            var lim = parseInt(this.limit) > 0 ? this.limit : this.items.length
-            switch (this.sortBy.toLowerCase()) {
-                case "rank":
-                    return this.items.slice().sort((a, b) => a.rank - b.rank).slice(0, lim)
-                case "votes":
-                    return this.items.slice().sort((a, b) => b.votes - a.votes).slice(0, lim)
-                default:
-                    return this.items.slice(0, lim);
-            }
-        },
-        labelFriendly() {
-            if(this.label){
-                return this.label.toUpperCase()
-            }
-            return ""
-        }
+const props = defineProps({
+    items: {},
+    label: String,
+    sortBy: String,
+    subTopDisplayType: String,
+    subBottomDisplayType: String,
+    sideLabel: Boolean,
+    limit: {
+        type: String,
+        default: "0"
     }
-}
+})
+
+const addSeeMore = computed(() => {
+    if(props.limit > 0 && props.limit < props.items.length){
+        return true
+    }else{
+        return false
+    }
+})
+
+const sortedItems = computed(() => {
+    var lim = parseInt(props.limit) > 0 ? props.limit : props.items.length
+    switch (props.sortBy.toLowerCase()) {
+        case "rank":
+            return props.items.slice().sort((a, b) => a.rank - b.rank).slice(0, lim)
+        case "votes":
+            return props.items.slice().sort((a, b) => b.votes - a.votes).slice(0, lim)
+        default:
+            return props.items.slice(0, lim);
+    }
+})
+
+const labelFriendly = computed(() => {
+    if(props.label){
+        return props.label.toUpperCase()
+    }
+    return ""
+})
 </script>
 
 <style scoped>

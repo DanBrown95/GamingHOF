@@ -6,20 +6,12 @@
     </router-link>
 </template>
 
-<script>
-export default {
-    name: 'see-more-tile',
-    props: {
-        platform: String
-    },
-    computed: {
-    },
-    data() {
-        return {
-            
-        }
-    }
-}
+<script setup>
+import {defineProps} from 'vue';
+
+defineProps({
+    platform: String
+})
 </script>
 
 <style scoped>

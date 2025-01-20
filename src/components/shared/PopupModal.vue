@@ -1,6 +1,6 @@
 <template>
-    <transition v-if="showModal" name="modal-fade">
-        <div class="modal-backdrop">
+    <transition name="modal-fade">
+        <div v-if="showModal" class="modal-backdrop">
             <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
                 <header class="modal-header" id="modalTitle">
                     <h1>Settings</h1>
@@ -23,39 +23,31 @@
     </transition>
 </template>
 
-<script>
+<script setup>
+import {defineProps, defineEmits, ref, onMounted, watch} from 'vue';
 import ToggleSwitch from "@/components/shared/ToggleSwitch.vue"
 
-export default {
-    name: 'PopupModal',
-    props: ["showModal"],
-    components: {
-        ToggleSwitch
-    },
-    data(){
-        return {
-            darkModeState: false
-        }
-    },
-    mounted(){
-        this.darkModeState = localStorage.getItem("useDarkMode") === 'true';
-    },
-    methods: {
-      close() {
-        this.$emit('close');
-      },
-    },
-    watch: {
-        darkModeState(newV){
-            localStorage.setItem("useDarkMode", newV);
-            if (!newV) {
-                document.body.classList.remove('darkMode');
-            }else{
-                document.body.classList.add('darkMode');
-            }
-        }
-    }
+defineProps({showModal: Boolean})
+const emit = defineEmits(['close'])
+
+const darkModeState = ref(false)
+
+onMounted(() => {
+    darkModeState.value = localStorage.getItem("useDarkMode") === 'true';
+})
+
+function close(){
+    emit('close')
 }
+
+watch(darkModeState, (newV) => {
+    localStorage.setItem("useDarkMode", newV);
+    if (!newV) {
+        document.body.classList.remove('darkMode');
+    }else{
+        document.body.classList.add('darkMode');
+    }
+})
 </script>
   
 <style>

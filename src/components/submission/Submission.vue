@@ -12,75 +12,71 @@
     </router-link>
 </template>
 
-<script>
-export default {
-    name: 'submission-item',
-    props: {
-        model: {},
-        topDisplayType: String,
-        bottomDisplayType: String 
-    },
-    computed: {
-        top(){
-            if(this.topDisplayType){
-                switch (this.topDisplayType.toLowerCase()) {
-                    case "name":
-                        return this.model.name
-                    case "rank":
-                        return "#" + this.model.rank
-                    case "votes":
-                        return this.model.votes + " votes"
-                    case "rankandvotes":
-                        return "#" + this.model.rank + ": " + this.model.votes + " votes"
-                    case "month":
-                        return this.model.month.toUpperCase()
-                    case "creator":
-                        return this.model.creator.gamertag
-                    case "game":
-                        return this.model.game.name
-                    default:
-                        return null;
-                }
-            }
-            return null
-        },
-        bottom(){
-            if(this.bottomDisplayType){
-                switch (this.bottomDisplayType.toLowerCase()) {
-                    case "name":
-                        return this.model.name
-                    case "rank":
-                        return "#" + this.model.rank
-                    case "votes":
-                        return this.model.votes + " votes"
-                    case "rankandvotes":
-                        return "#" + this.model.rank + ": " + this.model.votes + " votes"
-                    case "month":
-                        return this.model.month.toUpperCase()
-                    case "creator":
-                        return this.model.creator.gamertag
-                    case "game":
-                        return this.model.game.name
-                    default:
-                        return null;
-                }
-            }
-            return null
-        },
-        friendlyImageUrl() {
-            if(this.model.image == null || this.model.image == "" || this.model.image.length < 1){
-                return require(`@/assets/video-fallback.png`) // the module request
-            }else {
-                return this.model.image
-            }
-        }
-    },
-    data() {
-        return {
-            
+<script setup>
+import {defineProps, computed} from 'vue';
+
+const props = defineProps({
+    model: {},
+    topDisplayType: String,
+    bottomDisplayType: String
+})
+
+const top = computed(() => {
+    if(props.topDisplayType){
+        switch (props.topDisplayType.toLowerCase()) {
+            case "name":
+                return props.model.name
+            case "rank":
+                return "#" + props.model.rank
+            case "votes":
+                return props.model.votes + " votes"
+            case "rankandvotes":
+                return "#" + props.model.rank + ": " + props.model.votes + " votes"
+            case "month":
+                return props.model.month.toUpperCase()
+            case "creator":
+                return props.model.creator.gamertag
+            case "game":
+                return props.model.game.name
+            default:
+                return null;
         }
     }
-}
+    return null
+})
+
+const bottom = computed(() => {
+    if(props.bottomDisplayType){
+        switch (props.bottomDisplayType.toLowerCase()) {
+            case "name":
+                return props.model.name
+            case "rank":
+                return "#" + props.model.rank
+            case "votes":
+                return props.model.votes + " votes"
+            case "rankandvotes":
+                return "#" + props.model.rank + ": " + props.model.votes + " votes"
+            case "month":
+                return props.model.month.toUpperCase()
+            case "creator":
+                return props.model.creator.gamertag
+            case "game":
+                return props.model.game.name
+            default:
+                return null;
+        }
+    }
+    return null
+})
+
+const friendlyImageUrl = computed(() => {
+    if(props.model.image == null || props.model.image == "" || props.model.image.length < 1){
+        return require(`@/assets/video-fallback.png`) // the module request
+    }else {
+        return props.model.image
+    }
+})
+
 </script>
 
 <style scoped>

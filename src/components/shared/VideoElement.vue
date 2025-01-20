@@ -4,66 +4,68 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, ref, reactive, onMounted, onBeforeUnmount, getCurrentInstance, nextTick, defineEmits} from 'vue';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js'
 
-export default {
-    name: 'VideoElement',
-    props: ['src', 'styleConfig', 'autoplay'],
-    data(){
-        return {
-            instance: null,
-            option: {
-                url: "",
-                setting: true,
-                fullscreen: true,
-                fullscreenWeb: true,
-                pip: true,
-                autoplay: false,
-                autoOrientation: true,
+const props = defineProps(['src', 'styleConfig', 'autoplay'])
+const emit = defineEmits(['get-instance'])
+
+const instance = ref(null)
+const option = reactive({
+    url: "",
+    setting: true,
+    fullscreen: true,
+    fullscreenWeb: true,
+    pip: true,
+    autoplay: false,
+    autoOrientation: true,
+})
+
+onMounted(() => {
+    const { refs } = getCurrentInstance();
+
+    option.url = props.src;
+    if(props.autoplay === true){
+        option.autoplay = true;
+    }
+    instance.value = new Artplayer({
+        ...option,            
+        container: refs.artRef,
+        customType: {
+            m3u8: function (video, url) {
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                } else {
+                    instance.value.notice.show = 'Does not support playback of m3u8';
+                }
             },
         }
-    },
-    mounted() {
-        this.option.url = this.src;
-        if(this.autoplay === true){
-            this.option.autoplay = true;
-        }
-        this.instance = new Artplayer({
-            ...this.option,            
-            container: this.$refs.artRef,
-            customType: {
-                m3u8: function (video, url) {
-                    if (Hls.isSupported()) {
-                        const hls = new Hls();
-                        hls.loadSource(url);
-                        hls.attachMedia(video);
-                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                        video.src = url;
-                    } else {
-                        this.instance.notice.show = 'Does not support playback of m3u8';
-                    }
-                },
-            }
-        });
-        document.getElementsByClassName('art-state')[0].style.display = "none";
+    });
+    document.getElementsByClassName('art-state')[0].style.display = "none";
 
-        this.$nextTick(() => {
-            this.$emit("get-instance", this.instance);
-        });
+    nextTick(() => {
+        emit("get-instance", instance.value);
+    });
 
-        // rewind to start of video when ended.
-        this.instance.on('video:ended', () => {
-            this.instance.seek = 0;
+    // rewind to start of video when ended.
+    if (instance.value) {
+        instance.value.on('video:ended', () => {
+            instance.value.seek = 0;  // Rewind video to the start when it ends
         });
-    },
-    beforeUnmount() {
-        if (this.instance && this.instance.destroy) {
-            this.instance.destroy(false);
-        }
     }
-}
+})
+
+onBeforeUnmount(() => {
+    if (instance.value && instance.value.destroy) {
+        instance.value.destroy(false);
+    }
+})
 </script>
 
 <style scoped>
