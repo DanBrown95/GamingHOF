@@ -1,33 +1,36 @@
 <template>
     <transition name="modal-fade">
-        <div v-if="showModal" class="modal-backdrop">
-            <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
-                <header class="modal-header" id="modalTitle">
-                    <h1>Settings</h1>
-                    <button type="button" class="btn-close" @click="close" aria-label="Close modal">X</button>
-                </header>
+        <div v-if="showModal" class="modal-backdrop" @click.self="close">
+            <div class="modal" role="dialog" aria-labelledby="modalTitle">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <span class="material-icons title-icon">tune</span>
+                        <h2 id="modalTitle">Settings</h2>
+                    </div>
+                    <button class="close-btn" @click="close" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
 
-                <section class="modal-body" id="modalDescription">
-                    <div class="row">
-                        <label class="left">Dark Mode</label>
+                <div class="modal-body">
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <span class="material-icons setting-icon">dark_mode</span>
+                            <span class="setting-label">Dark Mode</span>
+                        </div>
                         <toggle-switch v-model="darkModeState"></toggle-switch>
                     </div>
-                </section>
-
-                <footer class="modal-footer">
-                    <slot name="footer">
-                    </slot>
-                </footer>
+                </div>
             </div>
         </div>
     </transition>
 </template>
 
 <script setup>
-import {defineProps, defineEmits, ref, onMounted, watch} from 'vue';
+import { defineProps, defineEmits, ref, onMounted, watch } from 'vue';
 import ToggleSwitch from "@/components/shared/ToggleSwitch.vue"
 
-defineProps({showModal: Boolean})
+defineProps({ showModal: Boolean })
 const emit = defineEmits(['close'])
 
 const darkModeState = ref(false)
@@ -36,114 +39,125 @@ onMounted(() => {
     darkModeState.value = localStorage.getItem("useDarkMode") === 'true';
 })
 
-function close(){
+function close() {
     emit('close')
 }
 
 watch(darkModeState, (newV) => {
     localStorage.setItem("useDarkMode", newV);
-    if (!newV) {
-        document.body.classList.remove('darkMode');
-    }else{
-        document.body.classList.add('darkMode');
-    }
+    document.body.classList.toggle('darkMode', newV);
 })
 </script>
-  
+
 <style>
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-        color: black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-    }
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+}
 
-    .modal {
-        background: #FFFFFF;
-        overflow-x: auto;
-        display: flex;
-        flex-direction: column;
-        height: 80%;
-        width: 80%;
-        min-height: 500px;
-    }
+.modal {
+    background: var(--bg, #eef1f5);
+    border-radius: var(--radius-lg, 24px);
+    box-shadow: var(--neu-out-lg, 10px 10px 22px #c8ccd2, -10px -10px 22px #ffffff);
+    width: 380px;
+    max-width: calc(100vw - 2rem);
+    overflow: hidden;
+}
 
-    .modal-header,
-    .modal-footer {
-        padding: 15px;
-        display: flex;
-    }
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
 
-    .modal-header {
-        position: relative;
-        border-bottom: 1px solid #eeeeee;
-        color: #4AAE9B;
-        justify-content: space-between;
-    }
+.modal-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
 
-    .modal-footer {
-        border-top: 1px solid #eeeeee;
-        flex-direction: column;
-    }
+.modal-title-group .title-icon {
+    font-size: 1.25rem;
+    color: var(--accent, #4ade80);
+}
 
-    .modal-body {
-        position: relative;
-        padding: 20px 10px;
-        height: 80%;
-    }
+.modal-title-group h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #2d3748);
+    letter-spacing: -0.01em;
+}
 
-    .btn-close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        border: none;
-        font-size: 20px;
-        padding: 10px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #4AAE9B;
-        background: transparent;
-    }
+.close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--text-muted, #94a3b8);
+    transition: background 0.2s ease, color 0.2s ease;
+}
 
-    .btn-green {
-        color: white;
-        background: #4AAE9B;
-        border: 1px solid #4AAE9B;
-        border-radius: 2px;
-    }
+.close-btn:hover {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-primary, #2d3748);
+}
 
-    .modal-fade-enter,
-    .modal-fade-leave-to {
-        opacity: 0;
-    }
+.close-btn .material-icons {
+    font-size: 1.2rem;
+}
 
-    .modal-fade-enter-active,
-    .modal-fade-leave-active {
-        transition: opacity .5s ease;
-    }
+.modal-body {
+    padding: 1.25rem 1.5rem;
+}
 
-    .row {
-        display: flex;
-        justify-content: center;
-    }
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md, 16px);
+    background: var(--bg, #eef1f5);
+    box-shadow: var(--neu-in-sm, inset 3px 3px 7px #c8ccd2, inset -3px -3px 7px #ffffff);
+}
 
-    .left {
-        display: inline-block;
-        width: 110px;
-        color: #777777;
-        line-height: 34px;  /* added */
-        margin-right: 30px;
-        font-weight: bold;
-    }
+.setting-info {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
 
-    .right {
-        padding: 5px 10px;
-    }
+.setting-icon {
+    font-size: 1.1rem;
+    color: var(--text-secondary, #64748b);
+}
+
+.setting-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary, #2d3748);
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
+    transform: scale(0.96);
+}
 </style>

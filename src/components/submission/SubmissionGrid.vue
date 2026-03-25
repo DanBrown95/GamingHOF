@@ -1,49 +1,56 @@
 <template>
-    <div class="container">
-        <div class="submission" v-for="item in filteredItems" :key="item.id">
-            <submission :model="item" bottomDisplayType="name" topDisplayType="game"></submission>
-        </div>
-        <div v-show="filteredItems.length < 1">
-            <h3 class="no-content">No content</h3>
-        </div>
+  <div class="grid-container">
+    <div class="submissions-grid" v-if="filteredItems.length > 0">
+      <div class="grid-slot" v-for="item in filteredItems" :key="item.id">
+        <submission :model="item" bottomDisplayType="name" topDisplayType="game" />
+      </div>
     </div>
+
+    <div v-if="filteredItems.length < 1" class="empty-state">
+      <span class="material-icons empty-icon">inbox</span>
+      <p class="empty-text">No submissions found</p>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import {defineProps, computed} from 'vue';
+import { defineProps, computed } from 'vue'
 import Submission from '@/components/submission/Submission.vue'
 
 const props = defineProps(['items', 'filter', 'gameIdFilter'])
 
 const filteredItems = computed(() => {
-    if (props.filter === "" || props.filter === "ALL" || props.filter == null) {
-        if(props.gameIdFilter && props.gameIdFilter > 0){
-            return props.items.filter(x => x.game.id == props.gameIdFilter)
-        }
-        return props.items;
-    }else{
-        if(props.gameIdFilter && props.gameIdFilter > 0){
-            return props.items.filter(o => o.platform.name.toUpperCase() === props.filter && o.game.id == props.gameIdFilter);
-        }
-        return props.items.filter(o => o.platform.name.toUpperCase() === props.filter);
-    }  
+  if (props.filter === 'HOF WINNERS') {
+    return props.items.filter(item => item.rank === 1)
+  }
+
+  const byPlatform = props.filter && props.filter !== '' && props.filter !== 'ALL'
+  const byGame     = props.gameIdFilter && props.gameIdFilter > 0
+
+  return props.items.filter(item => {
+    const platformMatch = !byPlatform || item.platform.name.toUpperCase() === props.filter
+    const gameMatch     = !byGame     || item.game.id == props.gameIdFilter
+    return platformMatch && gameMatch
+  })
 })
 </script>
 
 <style scoped>
-    .container {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
+.grid-container { padding: 1.5rem 1.5rem 3rem; }
 
-    .submission { 
-        display: inline-block;
-        aspect-ratio: 16 / 9;
-        height: 200px;
-        margin: 5px 10px;
-    }
+.submissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.grid-slot { aspect-ratio: 16/9; }
 
-    h3.no-content {
-        margin-top: 20px;
-    }
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 4rem 2rem; gap: 0.75rem;
+  border-radius: var(--radius-md); background: var(--bg);
+  box-shadow: var(--neu-in); margin-top: 1rem;
+}
+.empty-icon { font-size: 2.5rem; color: var(--text-muted); }
+.empty-text { font-size: 0.875rem; font-weight: 500; color: var(--text-muted); }
 </style>

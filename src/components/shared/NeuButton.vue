@@ -1,120 +1,73 @@
 <template>
-    <a @click="$emit('clicked')" class="button" :style="{'background-color': buttonColor}">
-        <span class="material-icons" :style="{'color': iconColor}">{{icon}}</span>
-        <span class="text" :style="{'color': textColor}">{{upperText}}</span>
+    <a @click="$emit('clicked')" class="neu-btn" :style="buttonStyle">
+        <span class="material-icons" :style="{'color': iconColor}">{{ icon }}</span>
+        <span class="btn-text" :style="{'color': textColor}">{{ upperText }}</span>
     </a>
 </template>
 
 <script setup>
-import {defineProps, defineEmits, computed} from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 
 const props = defineProps({
-    text: String, 
-    icon: String, 
-    iconColor: String, 
-    buttonColor: String, 
+    text: String,
+    icon: String,
+    iconColor: String,
+    buttonColor: String,
     textColor: String
 })
 
-defineEmits('clicked')
+defineEmits(['clicked'])
 
-const upperText = computed(() => {
-    return props.text.toUpperCase()
-})
+const upperText = computed(() => props.text.toUpperCase())
 
+const buttonStyle = computed(() => ({
+    'background-color': props.buttonColor || 'var(--bg, #eef1f5)'
+}))
 </script>
 
 <style scoped>
+.neu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: var(--radius-xl, 32px);
+    background: var(--bg, #eef1f5);
+    box-shadow: var(--neu-out, 6px 6px 14px #c8ccd2, -6px -6px 14px #ffffff);
+    cursor: pointer;
+    user-select: none;
+    transition: box-shadow var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
 
-    /* old button style */
-    /* .button {
-        margin: 0 auto;
-        justify-content: center;
-        border: solid 1px grey; 
-        border-radius: 20px; 
-        padding: 10px 15px;
-        width: fit-content;
-        padding: 1.5em 2em;
-    } */
+.neu-btn .material-icons {
+    font-size: 1.2rem;
+    color: var(--accent, #4ade80);
+}
 
-    .material-icons {
-        color: #1899D6;
-        margin-right: 10px;
-    }
+.btn-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary, #64748b);
+    white-space: nowrap;
+}
 
-    .button {
-        margin: 10px 20px;
-        justify-content: center;
-        align-items: center;
-        appearance: none;
-        background-color: #fff;
-        border-radius: 24px;
-        border-style: none;
-        box-shadow:  14px 14px 28px #7d7d7d,
-                    -14px -14px 28px #ffffff;
-        box-sizing: border-box;
-        color: #3c4043;
-        cursor: pointer;
-        display: inline-flex;
-        fill: currentcolor;
-        font-family: "Google Sans",Roboto,Arial,sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        height: 48px;
-        justify-content: center;
-        letter-spacing: .25px;
-        line-height: normal;
-        max-width: 100%;
-        overflow: visible;
-        padding: 2px 24px;
-        position: relative;
-        text-align: center;
-        text-transform: none;
-        transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-        width: auto;
-        will-change: transform,opacity;
-        z-index: 0;
-    }
+.neu-btn:hover {
+    box-shadow: 8px 8px 18px var(--shadow-dark, #c8ccd2), -8px -8px 18px var(--shadow-light, #ffffff);
+    transform: translateY(-1px);
+}
 
-    .button:hover {
-        background: #F6F9FE;
-        color: #174ea6;
-    }
+.neu-btn:active {
+    box-shadow: var(--neu-in, inset 4px 4px 10px #c8ccd2, inset -4px -4px 10px #ffffff);
+    transform: translateY(0);
+}
 
-    .button:active {
-        box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
-        outline: none;
-    }
-
-    .button:focus {
-        outline: none;
-        border: 2px solid #4285f4;
-    }
-
-    .button:not(:disabled) {
-        box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
-    }
-
-    .button:not(:disabled):hover {
-        box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
-    }
-
-    .button:not(:disabled):focus {
-        box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
-    }
-
-    .button:not(:disabled):active {
-        box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, inset rgba(60, 64, 67, .15) 0 2px 20px 0;
-    }
-
-    a.disabled {
-        /* box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px; */
-        box-shadow: none !important;
-        cursor: default !important;
-        background-color: lightgray !important;
-    }
-
+.neu-btn.disabled {
+    box-shadow: none !important;
+    transform: none !important;
+    cursor: default;
+    opacity: 0.5;
+}
 </style>

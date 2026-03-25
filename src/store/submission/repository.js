@@ -1,92 +1,24 @@
 import axios from 'axios'
 
-export function GetSubmissionsByPlatform(platformId) {
-    return axios({
-        url: 'https://localhost:44318/api/submission/GetSubmissionsByPlatform',
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        data: JSON.stringify(platformId)
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
+const BASE = 'https://localhost:44318/api/submission'
 
-export function GetSubmissionById(id) {
-    return axios({
-        url: 'https://localhost:44318/api/submission/GetById',
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        data: id
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
+const post = (action, data) => axios.post(`${BASE}/${action}`, data, { headers: { 'Content-Type': 'application/json' } }).then(r => r.data).catch(console.error)
+const get  = (action, params) => axios.get(`${BASE}/${action}`, { params }).then(r => r.data).catch(console.error)
 
-export function GetSubmissionsByCreator(id) {
-    return axios({
-        url: 'https://localhost:44318/api/submission/GetAllByCreator',
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        data: JSON.stringify(id)
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
-
-export function GetAllSubmissionsIncludingCreator() {
-    return axios({
-        url: 'https://localhost:44318/api/submission/GetAllIncludingCreator',
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
-
-export function GetAllSubmissions() {
-    return axios({
-        url: 'https://localhost:44318/api/submission/getall',
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
-
-export function VoteForSubmission(userId, submissionId) {
-    return axios({
-        url: 'https://localhost:44318/api/submission/upvote',
-        method: 'POST',
-        headers: {
-            //"Authorization": `Bearer ${accessToken}`
-            "Content-Type": "application/json"
-        },
-        data: { userId, submissionId }
-    })
-        .then(response => { return response.data; })
-        .catch(error => console.log(JSON.stringify(error.response.data.errors)))
-}
-
-// export function PhoneConfirmation(userId, accessToken){
-//     return axios({
-//         url: 'https://localhost:44318/api/account/ResendPhoneConfirmation',
-//         method: 'POST',
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${accessToken}`
-//         },
-//         data: JSON.stringify(userId)
-//     })
-//     .then(response => { return response.data; })
-//     .catch(error => console.log(JSON.stringify(error.response.data.errors)));
-// }
+export const GetSubmissionsByPlatform    = (platformId)       => post('GetAllByPlatformAsync', platformId)
+export const GetSubmissionById           = (id)               => post('GetById', JSON.stringify(id))
+export const GetSubmissionsByCreator     = (id)               => post('GetAllByCreator', JSON.stringify(id))
+export const GetAllSubmissionsIncludingCreator = ()           => get('GetAllIncludingCreator')
+export const GetAllSubmissions           = ()                 => get('GetAllAsync')
+export const VoteForSubmission           = (userId, submissionId) => post('Upvote', { userId, submissionId })
+export const SubmitClip                  = (model)            => post('Submit', model)
+export const SearchSubmissions           = (query)            => post('Search', query)
+export const GetTrending                 = (limit = 10)       => get('Trending', { limit })
+export const GetLeaderboard              = (platformId, limit = 50) => get('Leaderboard', { platformId, limit })
+export const GetHof                      = ()                 => get('Hof')
+export const GetRandom                   = ()                 => get('Random')
+export const GetRelated                  = (model)            => post('Related', model)
+export const GetArchive                  = (model)            => post('Archive', model)
+export const GetArchiveMonths            = ()                 => get('ArchiveMonths')
+export const ReportSubmission            = (userId, submissionId) => post('Report', { userId, submissionId })
+export const GetVoteHistory              = (userId)           => post('VoteHistory', JSON.stringify(userId))

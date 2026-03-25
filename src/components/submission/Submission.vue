@@ -1,19 +1,17 @@
 <template>
-    <router-link :to="{name: 'submissionDetails', params: { id: model.id }}">
-        <div class="neu-inset">
-            <div class="outer">
-                <div v-if="top" class="top-title">{{top}}</div>
-                <img class="sub-image"
-                    :src="friendlyImageUrl" />
-                <!--overlay title-->
-                <div v-if="bottom" class="bottom-title">{{bottom}}</div>
+    <router-link :to="{name: 'submissionDetails', params: { id: model.id }}" class="submission-link">
+        <div class="neu-card">
+            <div class="inner">
+                <div v-if="top" class="overlay top-overlay">{{ top }}</div>
+                <img class="sub-image" :src="friendlyImageUrl" loading="lazy" />
+                <div v-if="bottom" class="overlay bottom-overlay">{{ bottom }}</div>
             </div>
         </div>
     </router-link>
 </template>
 
 <script setup>
-import {defineProps, computed} from 'vue';
+import { defineProps, computed } from 'vue';
 
 const props = defineProps({
     model: {},
@@ -21,136 +19,98 @@ const props = defineProps({
     bottomDisplayType: String
 })
 
-const top = computed(() => {
-    if(props.topDisplayType){
-        switch (props.topDisplayType.toLowerCase()) {
-            case "name":
-                return props.model.name
-            case "rank":
-                return "#" + props.model.rank
-            case "votes":
-                return props.model.votes + " votes"
-            case "rankandvotes":
-                return "#" + props.model.rank + ": " + props.model.votes + " votes"
-            case "month":
-                return props.model.month.toUpperCase()
-            case "creator":
-                return props.model.creator.gamertag
-            case "game":
-                return props.model.game.name
-            default:
-                return null;
-        }
+function resolveDisplay(type) {
+    if (!type) return null
+    switch (type.toLowerCase()) {
+        case "name":         return props.model.name
+        case "rank":         return `#${props.model.rank}`
+        case "votes":        return `${props.model.votes} votes`
+        case "rankandvotes": return `#${props.model.rank} · ${props.model.votes} votes`
+        case "month":        return props.model.month?.toUpperCase()
+        case "creator":      return props.model.creator?.gamertag
+        case "game":         return props.model.game?.name
+        default:             return null
     }
-    return null
-})
+}
 
-const bottom = computed(() => {
-    if(props.bottomDisplayType){
-        switch (props.bottomDisplayType.toLowerCase()) {
-            case "name":
-                return props.model.name
-            case "rank":
-                return "#" + props.model.rank
-            case "votes":
-                return props.model.votes + " votes"
-            case "rankandvotes":
-                return "#" + props.model.rank + ": " + props.model.votes + " votes"
-            case "month":
-                return props.model.month.toUpperCase()
-            case "creator":
-                return props.model.creator.gamertag
-            case "game":
-                return props.model.game.name
-            default:
-                return null;
-        }
-    }
-    return null
-})
+const top    = computed(() => resolveDisplay(props.topDisplayType))
+const bottom = computed(() => resolveDisplay(props.bottomDisplayType))
 
 const friendlyImageUrl = computed(() => {
-    if(props.model.image == null || props.model.image == "" || props.model.image.length < 1){
-        return require(`@/assets/video-fallback.png`) // the module request
-    }else {
-        return props.model.image
+    if (!props.model.image || props.model.image.length < 1) {
+        return require(`@/assets/video-fallback.png`)
     }
+    return props.model.image
 })
-
 </script>
 
 <style scoped>
-    .neu-inset {
-        height: 100%;
-        position: relative;
-        border-radius: 15px;
-        border: solid 1px white;
-        overflow: hidden;
+.submission-link {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+}
 
-        padding: 8px;
-        background: #ffffff;
-        box-shadow: inset 6px 6px 9px #c9c9c9,
-            inset -6px -6px 9px #ffffff;
+.neu-card {
+    height: 100%;
+    border-radius: var(--radius-md, 16px);
+    padding: 7px;
+    background: var(--bg, #eef1f5);
+    box-shadow: var(--neu-in, inset 4px 4px 10px #c8ccd2, inset -4px -4px 10px #ffffff);
+    transition: box-shadow var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
+}
 
-            
-    }
+.neu-card:hover {
+    box-shadow: inset 3px 3px 7px var(--shadow-dark, #c8ccd2), inset -3px -3px 7px var(--shadow-light, #ffffff),
+                0 6px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
 
-    .outer {
-        height: 100%;
-        position: relative;
-        border-radius: 15px;
-        display: flex; /* use flexbox layout for the div */
-        align-items: center; /* center the items horizontally and vertically */
-        overflow: hidden; /* hide any overflow */
-    }
+.inner {
+    height: 100%;
+    position: relative;
+    border-radius: calc(var(--radius-md, 16px) - 4px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
 
-    .sub-image {
-        width: 100%;
-        min-height: 100%;
-    }
+.sub-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
-    .bottom-title {
-        background-color: rgb(0, 0, 0, 0.5);
-        
-        /*positioned relative to parent div (container) */
-        position: absolute;   
+/* ─── Overlays ───────────────────────────────────────────────── */
+.overlay {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 1;
+}
 
-        /* bottom margin is 0 so that it
-            coincides with container's bottom margin*/
-        bottom: 0px;           
-        color: white;
-        width: 100%;
-        font-size: 15px;
-        padding: 10px 0;
-        text-align: center;
+.top-overlay {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
 
-        /*invisible because opacity is 0*/
-        opacity: 0;           
-        transition: 0.6s;
-    }
+.bottom-overlay {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    padding-top: 1.5rem;
+}
 
-    .top-title {
-        background-color: rgb(0, 0, 0, 0.5);
-        
-        /*positioned relative to parent div (container) */
-        position: absolute;   
-
-        /* top margin is 0 so that it
-            coincides with container's bottom margin*/
-        top: 0px;           
-        color: white;
-        width: 100%;
-        font-size: 15px;
-        padding: 10px 0;
-        text-align: center;
-
-        /*invisible because opacity is 0*/
-        opacity: 0;           
-        transition: 0.6s;
-    }
-
-    .outer:hover .bottom-title, .outer:hover .top-title {
-        /*becomes visible on hover*/
-        opacity: 1;       
-    }
+.inner:hover .overlay {
+    opacity: 1;
+}
 </style>

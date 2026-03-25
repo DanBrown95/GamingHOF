@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="player-root">
         <div class="player" ref="artRef" :style="{'height': styleConfig.height, 'width': styleConfig.width, 'border-color': styleConfig.borderColor, 'border-width': styleConfig.borderSize, 'border-radius': styleConfig.cornerRadius }"></div>
     </div>
 </template>
@@ -69,11 +69,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+    .player-root {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
     .player {
-        min-width: 600px;
-        min-height: 400px;
-        margin: 0 auto;
-        border-radius: 0px;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
     }
 </style>
